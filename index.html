@@ -98,7 +98,7 @@
   <div class="theory">Istalgan haqiqiy qiymatli f(x) funksiyasi. Simpson usulida n toq bo‘lsa, dastur nima uchun n ni juftga o‘zgartirganini qadamda tushuntiradi.</div>
   <div class="grid2">
     <div class="card"><label>f(x)</label><input id="int-f" value="sin(x)"><div class="examples"><button onclick="setVal('int-f','e^(-x^2)')">e^(-x²)</button><button onclick="setVal('int-f','1/(1+x^2)')">1/(1+x²)</button><button onclick="setVal('int-f','sqrt(1+x^2)')">√(1+x²)</button></div><div class="row"><div><label>a</label><input id="int-a" value="0"></div><div><label>b</label><input id="int-b" value="pi"></div><div><label>n</label><input id="int-n" type="number" value="10" min="1"></div></div><div class="buttons"><button onclick="solveIntegral('rect')">O‘rta to‘rtburchak</button><button onclick="solveIntegral('trap')">Trapetsiya</button><button onclick="solveIntegral('simpson')">Simpson</button><button class="secondary" onclick="compareIntegrals()">Taqqosla</button></div></div>
-    <div class="card result-card"><h3>Natija</h3><div id="int-summary" class="summary">Funksiyani kiriting.</div><canvas id="int-canvas" width="720" height="330"></canvas></div>
+    <div class="card result-card"><h3>Natija va geometrik ma’no</h3><div id="int-summary" class="summary">Funksiyani kiriting.</div><canvas id="int-canvas" width="720" height="350"></canvas><div id="int-visual-note" class="visual-note">Metodni ishga tushiring — integralning geometrik yaqinlashuvi ko‘rinadi.</div></div>
   </div>
   <div id="int-compare" class="card hidden"></div>
   <step-box data-key="int"></step-box>
