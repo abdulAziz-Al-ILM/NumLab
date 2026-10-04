@@ -17,5 +17,6 @@ jobs:
         run: |
           node --check app.js
           node --check subjects/modeling/modeling.js
+          node --check subjects/pde/pde.js
       - name: Numerical smoke tests
         run: node tests/smoke.js
