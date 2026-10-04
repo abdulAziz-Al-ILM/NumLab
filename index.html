@@ -3,415 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="NumLab UZ — sonli usullarni qadam-baqadam hisoblash va vizuallashtirish laboratoriyasi.">
-<title>NumLab UZ — Sonli usullar laboratoriyasi</title>
-<style>
-*{box-sizing:border-box}body{font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin:0;background:#f5f7fb;color:#172033;line-height:1.55}
-.hero{padding:32px clamp(20px,5vw,64px);background:#0f172a;color:white;display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{font-size:11px;letter-spacing:.12em;color:#93c5fd;font-weight:800}.hero h1{font-size:42px;margin:4px 0}.hero p{margin:0;color:#cbd5e1;max-width:760px}.hero-actions{display:flex;gap:8px;margin-top:18px}.hero-badge{min-width:130px;border:1px solid #334155;border-radius:18px;padding:16px;text-align:center;background:#111c33}.hero-badge b{display:block;font-size:24px}.hero-badge span{font-size:12px;color:#94a3b8}
-button{border:0;border-radius:10px;padding:10px 14px;background:#2563eb;color:white;font-weight:750;cursor:pointer}button:hover{filter:brightness(.97)}button.secondary{background:#e2e8f0;color:#172033}.ghost{background:transparent;border:1px solid #475569}.small{padding:7px 10px;font-size:12px}
-.notice{max-width:1200px;margin:16px auto 0;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px 18px}.hidden{display:none!important}
-nav{display:flex;gap:8px;flex-wrap:wrap;padding:12px clamp(16px,4vw,48px);background:white;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:20}.tab{background:#f1f5f9;color:#334155}.tab.active{background:#0f172a;color:white}
-main{max-width:1200px;margin:auto;padding:28px 20px}.panel{display:none}.panel.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:12px}.section-head h2{margin:2px 0 0;font-size:27px}.kicker{font-size:11px;letter-spacing:.12em;font-weight:900;color:#2563eb}.formula{font-family:Georgia,serif;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;font-size:18px}
-.theory{background:#fff;border-left:4px solid #2563eb;border-radius:12px;padding:14px 16px;margin-bottom:18px;box-shadow:0 4px 16px rgba(15,23,42,.04)}.theory span{display:inline-block;margin-left:14px;color:#475569}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;margin-bottom:18px;box-shadow:0 6px 22px rgba(15,23,42,.045)}.result-card{background:linear-gradient(180deg,#fff,#f8fbff)}
-label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px;color:#334155}input,textarea{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#fff}input:focus,textarea:focus{outline:2px solid #bfdbfe;border-color:#60a5fa}
-.row{display:flex;gap:10px}.row>div{flex:1}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.summary{padding:13px 14px;background:#eff6ff;border:1px solid #dbeafe;border-radius:11px;min-height:55px}.check{margin-top:10px;font-size:13px}.hint,.muted{font-size:12px;color:#64748b}code{background:#f1f5f9;padding:2px 5px;border-radius:5px}
-canvas{width:100%;max-width:100%;border:1px solid #e2e8f0;border-radius:10px;background:white;margin-top:12px}
-.step-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.step-toolbar h3{margin:0}.steps{margin-top:12px}.step-card{display:none;border:1px solid #dbe3ef;border-radius:13px;padding:14px 16px;margin:10px 0;background:#fbfdff}.step-card.visible{display:block}.step-no{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-size:12px;font-weight:800;margin-right:8px}.step-title{font-weight:850}.step-body{margin-top:8px;color:#334155}.math{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f1f5f9;border-radius:8px;padding:9px;overflow:auto;white-space:pre-wrap}.empty{color:#94a3b8;padding:18px;text-align:center;border:1px dashed #cbd5e1;border-radius:12px}
-.matrix{font-family:ui-monospace,monospace;white-space:pre;overflow:auto;background:#f8fafc;padding:10px;border-radius:9px}.compare-table{width:100%;border-collapse:collapse}.compare-table th,.compare-table td{border:1px solid #e2e8f0;padding:8px;text-align:right}.compare-table th:first-child,.compare-table td:first-child{text-align:left}.compare-table th{background:#f8fafc}
-footer{text-align:center;padding:30px 16px;color:#475569;border-top:1px solid #e2e8f0;background:#fff}
-@media(max-width:820px){.grid2{grid-template-columns:1fr}.row{flex-direction:column}.hero{flex-direction:column;align-items:flex-start}.section-head{align-items:flex-start;flex-direction:column}.theory span{display:block;margin:5px 0}.hero h1{font-size:34px}}
-@media print{nav,.hero-actions,.step-toolbar button,.notice{display:none!important}.panel{display:block!important;break-before:page}.hero{background:white;color:black;padding:10px 0}.hero p,.eyebrow{color:#333}.card,.theory{box-shadow:none}.step-card{display:block!important}main{max-width:none}.hero-badge{color:black;border-color:#999;background:white}}
-</style>
+<meta name="description" content="NumLab UZ — istalgan mos sonli masalani qadam-baqadam yechish va tushuntirish laboratoriyasi.">
+<title>NumLab UZ — Universal Numerical Methods Lab</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="hero">
   <div>
     <div class="eyebrow">ANDIJON DAVLAT UNIVERSITETI • AMALIY MATEMATIKA</div>
     <h1>NumLab UZ</h1>
-    <p>Sonli usullarni <b>qadam-baqadam</b> hisoblash, tushuntirish, taqqoslash va vizuallashtirish laboratoriyasi</p>
+    <p>Misolni o‘zingiz kiriting. NumLab metodni tanlab emas, <b>hisobning o‘zini qadam-baqadam</b> ko‘rsatadi.</p>
     <div class="hero-actions">
-      <button class="ghost" onclick="window.print()">Hisobotni PDF / Print</button>
-      <button class="ghost" onclick="showAbout()">Loyiha haqida</button>
+      <button class="ghost" onclick="window.print()">PDF / Print</button>
+      <button class="ghost" onclick="toggleHelp()">Yozish qoidalari</button>
     </div>
   </div>
-  <div class="hero-badge"><b>v2.0</b><span>Academic Edition</span></div>
+  <div class="hero-badge"><b>v3.0</b><span>Universal Input</span></div>
 </header>
-
-<div id="about" class="notice hidden">
-  <b>Maqsad:</b> NumLab faqat javob bermaydi. Har bir metod uchun formula, boshlang‘ich ma’lumot, iteratsiyalar,
-  xatolik mezoni va yakuniy xulosani ketma-ket ko‘rsatadi. Shu sabab talaba natijani emas, algoritmning o‘zini ko‘radi.
+<div id="help" class="notice hidden">
+  <b>Oddiy matematik yozuv ishlaydi:</b>
+  <code>x^2=2</code>, <code>2x+3</code>, <code>sin(x)</code>, <code>sin x</code>, <code>√x</code>, <code>ln(x)</code>, <code>e^x</code>, <code>pi</code>.
+  <span>NumLab <code>Math.sin(x)</code> kabi JavaScript yozuvini ham qabul qiladi.</span>
 </div>
-
 <nav id="tabs">
-  <button class="tab active" data-tab="roots">01 Ildiz topish</button>
-  <button class="tab" data-tab="gauss">02 Gauss</button>
+  <button class="tab active" data-tab="roots">01 Ildiz</button>
+  <button class="tab" data-tab="gauss">02 Sistema</button>
   <button class="tab" data-tab="interp">03 Interpolatsiya</button>
   <button class="tab" data-tab="integral">04 Integral</button>
   <button class="tab" data-tab="ode">05 ODE</button>
-  <button class="tab" data-tab="pde">06 Elliptik PDE</button>
+  <button class="tab" data-tab="pde">06 Laplace PDE</button>
 </nav>
-
 <main>
 <section id="roots" class="panel active">
-  <div class="section-head">
-    <div><span class="kicker">LAB 01</span><h2>Algebraik va transendent tenglamalar ildizi</h2></div>
-    <div class="formula">f(x)=0</div>
-  </div>
-  <div class="theory">
-    <b>Maqsad:</b> ildizni berilgan ε aniqlikda topish va metodlarning konvergentsiyasini solishtirish.
-    <span>Bisection: interval qisqaradi.</span><span>Newton: xₙ₊₁=xₙ−f(xₙ)/f′(xₙ).</span><span>Secant: hosilasiz yaqinlashish.</span>
-  </div>
+  <div class="section-head"><div><span class="kicker">LAB 01</span><h2>Tenglama ildizini topish</h2></div><div class="formula">F(x)=0</div></div>
+  <div class="theory"><b>Istalgan tenglama kiriting.</b> Agar <code>=</code> bo‘lsa, NumLab chap tomon − o‘ng tomon qilib <i>F(x)=0</i> ga keltiradi. Bisection uchun interval ildizni qamramasa, dastur avtomatik qidirishga urinadi.</div>
   <div class="grid2">
     <div class="card">
-      <label>f(x)</label><input id="root-f" value="x*x*x - x - 2">
-      <div class="row">
-        <div><label>a</label><input id="root-a" type="number" step="any" value="1"></div>
-        <div><label>b</label><input id="root-b" type="number" step="any" value="2"></div>
-      </div>
-      <div class="row">
-        <div><label>ε</label><input id="root-eps" type="number" step="any" value="0.0001"></div>
-        <div><label>Max iter.</label><input id="root-max" type="number" value="50"></div>
-      </div>
-      <div class="buttons">
-        <button onclick="solveRoot('bisection')">Bisection</button>
-        <button onclick="solveRoot('newton')">Newton</button>
-        <button onclick="solveRoot('secant')">Secant</button>
-        <button class="secondary" onclick="compareRoots()">3 usulni taqqosla</button>
-      </div>
-      <p class="hint">Misol: <code>Math.sin(x)-0.5</code>, <code>Math.exp(x)-3*x</code></p>
+      <label>Tenglama yoki F(x)</label><input id="root-f" value="x^3-x-2=0">
+      <div class="examples">Misollar: <button onclick="setVal('root-f','x^2=2')">x²=2</button><button onclick="setVal('root-f','sin x=0.7')">sin x=0.7</button><button onclick="setVal('root-f','e^x=3x')">eˣ=3x</button></div>
+      <div class="row"><div><label>a</label><input id="root-a" type="number" step="any" value="1"></div><div><label>b</label><input id="root-b" type="number" step="any" value="2"></div></div>
+      <div class="row"><div><label>ε</label><input id="root-eps" type="number" step="any" value="0.000001"></div><div><label>Max iter.</label><input id="root-max" type="number" value="100"></div></div>
+      <div class="buttons"><button onclick="solveRoot('bisection')">Bisection</button><button onclick="solveRoot('newton')">Newton</button><button onclick="solveRoot('secant')">Secant</button><button class="secondary" onclick="compareRoots()">Taqqosla</button></div>
     </div>
-    <div class="card result-card">
-      <h3>Yakuniy natija</h3><div id="root-summary" class="summary">Usulni tanlang.</div>
-      <canvas id="root-canvas" width="700" height="320"></canvas>
-    </div>
+    <div class="card result-card"><h3>Natija</h3><div id="root-summary" class="summary">Misol kiriting va usulni tanlang.</div><canvas id="root-canvas" width="720" height="330"></canvas></div>
   </div>
   <div id="root-compare" class="card hidden"></div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Qadam-baqadam yechim</h3><div><button class="small secondary" onclick="stepPrev('root')">← Oldingi</button><button class="small" onclick="stepNext('root')">Keyingi →</button><button class="small secondary" onclick="stepAll('root')">Hammasini och</button></div></div>
-    <div id="root-steps" class="steps"><div class="empty">Hisoblang — qadamlar shu yerda paydo bo‘ladi.</div></div>
-  </div>
+  <step-box data-key="root"></step-box>
 </section>
-
 <section id="gauss" class="panel">
-  <div class="section-head"><div><span class="kicker">LAB 02</span><h2>Chiziqli tenglamalar sistemasini Gauss usuli</h2></div><div class="formula">Ax=b</div></div>
-  <div class="theory"><b>G‘oya:</b> kengaytirilgan matritsa elementar satr almashtirishlari orqali yuqori uchburchak ko‘rinishga keltiriladi, so‘ng teskari yurish bajariladi.</div>
+  <div class="section-head"><div><span class="kicker">LAB 02</span><h2>Chiziqli tenglamalar sistemasi</h2></div><div class="formula">Ax=b</div></div>
+  <div class="theory">Istalgan o‘lchamdagi kvadrat sistema. Ikki xil format qabul qilinadi: <b>kengaytirilgan matritsa</b> yoki <b>tenglamalar</b> (<code>2x+3y=7</code> kabi).</div>
   <div class="grid2">
     <div class="card">
-      <label>Kengaytirilgan matritsa [A|b]</label>
-      <textarea id="gauss-mat" rows="9">2 1 -1 8
+      <label>Kiritish turi</label><select id="gauss-mode" onchange="switchGaussMode()"><option value="matrix">[A|b] matritsa</option><option value="equations">Tenglamalar</option></select>
+      <div id="gauss-matrix-wrap"><label>[A|b], har qator yangi qatorda</label><textarea id="gauss-mat" rows="8">2 1 -1 8
 -3 -1 2 -11
--2 1 2 -3</textarea>
+-2 1 2 -3</textarea></div>
+      <div id="gauss-equations-wrap" class="hidden"><label>Tenglamalar, har biri yangi qatorda</label><textarea id="gauss-eqs" rows="8">2x+y-z=8
+-3x-y+2z=-11
+-2x+y+2z=-3</textarea><p class="hint">O‘zgaruvchilar: x, y, z, t, u, v, w yoki x1, x2, ...</p></div>
       <button onclick="solveGauss()">Gauss usuli bilan yech</button>
     </div>
-    <div class="card result-card"><h3>Yakuniy yechim</h3><div id="gauss-summary" class="summary">Matritsani kiriting.</div><div id="gauss-check" class="check"></div></div>
+    <div class="card result-card"><h3>Yechim va tekshiruv</h3><div id="gauss-summary" class="summary">Sistemani kiriting.</div><div id="gauss-check" class="check"></div></div>
   </div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Elementar almashtirishlar</h3><div><button class="small secondary" onclick="stepPrev('gauss')">← Oldingi</button><button class="small" onclick="stepNext('gauss')">Keyingi →</button><button class="small secondary" onclick="stepAll('gauss')">Hammasini och</button></div></div>
-    <div id="gauss-steps" class="steps"><div class="empty">Hisoblang — satr almashtirishlari ketma-ket ko‘rsatiladi.</div></div>
-  </div>
+  <step-box data-key="gauss"></step-box>
 </section>
-
 <section id="interp" class="panel">
-  <div class="section-head"><div><span class="kicker">LAB 03</span><h2>Interpolatsiya: Lagrange, Newton va Chebishev g‘oyasi</h2></div><div class="formula">Pₙ(xᵢ)=yᵢ</div></div>
-  <div class="theory"><b>Maqsad:</b> ma’lum tugunlardagi qiymatlar orqali oraliq nuqtadagi qiymatni yaqinlashtirish va interpolant qurish.</div>
+  <div class="section-head"><div><span class="kicker">LAB 03</span><h2>Interpolatsiya</h2></div><div class="formula">Pₙ(xᵢ)=yᵢ</div></div>
+  <div class="theory">Istalgan miqdordagi tugun. x va y qiymatlari vergul, nuqtali vergul yoki bo‘shliq bilan yozilishi mumkin.</div>
   <div class="grid2">
-    <div class="card">
-      <label>x tugunlar</label><input id="ix" value="0,1,2,3">
-      <label>y qiymatlar</label><input id="iy" value="1,2,5,10">
-      <label>Hisoblanadigan x*</label><input id="itarget" type="number" step="any" value="1.5">
-      <div class="buttons"><button onclick="solveInterp('lagrange')">Lagrange</button><button onclick="solveInterp('newton')">Newton</button><button class="secondary" onclick="chebDemo()">Chebishev demo</button></div>
-    </div>
-    <div class="card result-card"><h3>Natija</h3><div id="interp-summary" class="summary">Usulni tanlang.</div><canvas id="interp-canvas" width="700" height="320"></canvas></div>
+    <div class="card"><label>x tugunlar</label><input id="ix" value="0,1,2,3"><label>y qiymatlar</label><input id="iy" value="1,2,5,10"><label>x*</label><input id="itarget" value="1.5"><div class="buttons"><button onclick="solveInterp('lagrange')">Lagrange</button><button onclick="solveInterp('newton')">Newton</button></div></div>
+    <div class="card result-card"><h3>Natija</h3><div id="interp-summary" class="summary">Tugunlarni kiriting.</div><canvas id="interp-canvas" width="720" height="330"></canvas></div>
   </div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Qadam-baqadam qurilish</h3><div><button class="small secondary" onclick="stepPrev('interp')">← Oldingi</button><button class="small" onclick="stepNext('interp')">Keyingi →</button><button class="small secondary" onclick="stepAll('interp')">Hammasini och</button></div></div>
-    <div id="interp-steps" class="steps"><div class="empty">Usulni tanlang.</div></div>
-  </div>
+  <step-box data-key="interp"></step-box>
 </section>
-
 <section id="integral" class="panel">
-  <div class="section-head"><div><span class="kicker">LAB 04</span><h2>Integrallarni taqribiy hisoblash</h2></div><div class="formula">∫ₐᵇ f(x)dx</div></div>
-  <div class="theory"><b>G‘oya:</b> [a,b] oraliq n bo‘lakka ajratilib, integral geometrik yoki polinomli yaqinlashish bilan hisoblanadi.</div>
+  <div class="section-head"><div><span class="kicker">LAB 04</span><h2>Aniq integralni taqribiy hisoblash</h2></div><div class="formula">∫ₐᵇ f(x)dx</div></div>
+  <div class="theory">Istalgan haqiqiy qiymatli f(x) funksiyasi. Simpson usulida n toq bo‘lsa, dastur nima uchun n ni juftga o‘zgartirganini qadamda tushuntiradi.</div>
   <div class="grid2">
-    <div class="card">
-      <label>f(x)</label><input id="int-f" value="Math.sin(x)">
-      <div class="row"><div><label>a</label><input id="int-a" type="number" step="any" value="0"></div><div><label>b</label><input id="int-b" type="number" step="any" value="3.141592653589793"></div><div><label>n</label><input id="int-n" type="number" value="10"></div></div>
-      <div class="buttons"><button onclick="solveIntegral('rect')">O‘rta to‘rtburchak</button><button onclick="solveIntegral('trap')">Trapetsiya</button><button onclick="solveIntegral('simpson')">Simpson</button><button class="secondary" onclick="compareIntegrals()">Taqqosla</button></div>
-    </div>
-    <div class="card result-card"><h3>Natija</h3><div id="int-summary" class="summary">Usulni tanlang.</div><canvas id="int-canvas" width="700" height="320"></canvas></div>
+    <div class="card"><label>f(x)</label><input id="int-f" value="sin(x)"><div class="examples"><button onclick="setVal('int-f','e^(-x^2)')">e^(-x²)</button><button onclick="setVal('int-f','1/(1+x^2)')">1/(1+x²)</button><button onclick="setVal('int-f','sqrt(1+x^2)')">√(1+x²)</button></div><div class="row"><div><label>a</label><input id="int-a" value="0"></div><div><label>b</label><input id="int-b" value="pi"></div><div><label>n</label><input id="int-n" type="number" value="10" min="1"></div></div><div class="buttons"><button onclick="solveIntegral('rect')">O‘rta to‘rtburchak</button><button onclick="solveIntegral('trap')">Trapetsiya</button><button onclick="solveIntegral('simpson')">Simpson</button><button class="secondary" onclick="compareIntegrals()">Taqqosla</button></div></div>
+    <div class="card result-card"><h3>Natija</h3><div id="int-summary" class="summary">Funksiyani kiriting.</div><canvas id="int-canvas" width="720" height="330"></canvas></div>
   </div>
   <div id="int-compare" class="card hidden"></div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Qadam-baqadam hisob</h3><div><button class="small secondary" onclick="stepPrev('int')">← Oldingi</button><button class="small" onclick="stepNext('int')">Keyingi →</button><button class="small secondary" onclick="stepAll('int')">Hammasini och</button></div></div>
-    <div id="int-steps" class="steps"><div class="empty">Usulni tanlang.</div></div>
-  </div>
+  <step-box data-key="int"></step-box>
 </section>
-
 <section id="ode" class="panel">
-  <div class="section-head"><div><span class="kicker">LAB 05</span><h2>ODE: Eyler va Runge–Kutta 4</h2></div><div class="formula">y′=f(x,y)</div></div>
-  <div class="theory"><b>Maqsad:</b> boshlang‘ich shart y(x₀)=y₀ bo‘yicha yechimni to‘r nuqtalarida taqribiy qurish.</div>
+  <div class="section-head"><div><span class="kicker">LAB 05</span><h2>Boshlang‘ich shartli ODE</h2></div><div class="formula">y′=f(x,y), y(x₀)=y₀</div></div>
+  <div class="theory">Istalgan birinchi tartibli ODE o‘ng tomoni f(x,y). Masalan <code>x+y</code>, <code>x^2-y</code>, <code>sin(x)-y</code>.</div>
   <div class="grid2">
-    <div class="card">
-      <label>y′ = f(x,y)</label><input id="ode-f" value="x + y">
-      <div class="row"><div><label>x₀</label><input id="ode-x0" type="number" step="any" value="0"></div><div><label>y₀</label><input id="ode-y0" type="number" step="any" value="1"></div><div><label>x oxiri</label><input id="ode-x1" type="number" step="any" value="1"></div><div><label>h</label><input id="ode-h" type="number" step="any" value="0.1"></div></div>
-      <div class="buttons"><button onclick="solveODE('euler')">Eyler</button><button onclick="solveODE('rk4')">RK4</button><button class="secondary" onclick="compareODE()">Taqqosla</button></div>
-    </div>
-    <div class="card result-card"><h3>Natija</h3><div id="ode-summary" class="summary">Usulni tanlang.</div><canvas id="ode-canvas" width="700" height="320"></canvas></div>
+    <div class="card"><label>f(x,y)</label><input id="ode-f" value="x+y"><div class="row"><div><label>x₀</label><input id="ode-x0" value="0"></div><div><label>y₀</label><input id="ode-y0" value="1"></div><div><label>x oxiri</label><input id="ode-x1" value="1"></div><div><label>h</label><input id="ode-h" value="0.1"></div></div><div class="buttons"><button onclick="solveODE('euler')">Eyler</button><button onclick="solveODE('rk4')">RK4</button><button class="secondary" onclick="compareODE()">Taqqosla</button></div></div>
+    <div class="card result-card"><h3>Natija</h3><div id="ode-summary" class="summary">ODE ni kiriting.</div><canvas id="ode-canvas" width="720" height="330"></canvas></div>
   </div>
   <div id="ode-compare" class="card hidden"></div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Qadam-baqadam integrallash</h3><div><button class="small secondary" onclick="stepPrev('ode')">← Oldingi</button><button class="small" onclick="stepNext('ode')">Keyingi →</button><button class="small secondary" onclick="stepAll('ode')">Hammasini och</button></div></div>
-    <div id="ode-steps" class="steps"><div class="empty">Usulni tanlang.</div></div>
-  </div>
+  <step-box data-key="ode"></step-box>
 </section>
-
 <section id="pde" class="panel">
-  <div class="section-head"><div><span class="kicker">LAB 06</span><h2>Elliptik PDE: Laplace tenglamasi uchun to‘r metodi</h2></div><div class="formula">uₓₓ+uᵧᵧ=0</div></div>
-  <div class="theory"><b>Diskretlashtirish:</b> ichki tugunda uᵢⱼ=(uᵢ₋₁ⱼ+uᵢ₊₁ⱼ+uᵢⱼ₋₁+uᵢⱼ₊₁)/4. Iteratsiya ε shart bajarilguncha davom etadi.</div>
+  <div class="section-head"><div><span class="kicker">LAB 06</span><h2>Laplace tenglamasi — umumiy Dirichlet chegaralari</h2></div><div class="formula">uₓₓ+uᵧᵧ=0</div></div>
+  <div class="theory">Kvadrat soha [0,1]×[0,1]. Har to‘rtta chegara konstanta yoki funksiya bo‘lishi mumkin: yuqori/pastda x, chap/o‘ngda y ishlatiladi.</div>
   <div class="grid2">
-    <div class="card">
-      <label>To‘r N×N</label><input id="pde-n" type="number" value="10" min="4" max="40">
-      <div class="row"><div><label>Yuqori chegara</label><input id="pde-top" type="number" step="any" value="100"></div><div><label>Qolgan chegaralar</label><input id="pde-other" type="number" step="any" value="0"></div></div>
-      <label>ε</label><input id="pde-eps" type="number" step="any" value="0.0001">
-      <button onclick="solvePDE()">Jacobi bilan yech</button>
-    </div>
-    <div class="card result-card"><h3>Natija</h3><div id="pde-summary" class="summary">Parametrlarni kiriting.</div><canvas id="pde-canvas" width="700" height="380"></canvas></div>
+    <div class="card"><label>To‘r N×N</label><input id="pde-n" type="number" value="12" min="4" max="60"><div class="row"><div><label>Yuqori u(x,1)</label><input id="pde-top" value="100"></div><div><label>Past u(x,0)</label><input id="pde-bottom" value="0"></div></div><div class="row"><div><label>Chap u(0,y)</label><input id="pde-left" value="0"></div><div><label>O‘ng u(1,y)</label><input id="pde-right" value="0"></div></div><label>ε</label><input id="pde-eps" value="0.0001"><button onclick="solvePDE()">Jacobi bilan yech</button><p class="hint">Masalan yuqori: <code>100*sin(pi*x)</code>, o‘ng: <code>50*y</code>.</p></div>
+    <div class="card result-card"><h3>Natija</h3><div id="pde-summary" class="summary">Chegara shartlarini kiriting.</div><canvas id="pde-canvas" width="720" height="390"></canvas></div>
   </div>
-  <div class="card">
-    <div class="step-toolbar"><h3>Iteratsiya evolyutsiyasi</h3><div><button class="small secondary" onclick="stepPrev('pde')">← Oldingi</button><button class="small" onclick="stepNext('pde')">Keyingi →</button><button class="small secondary" onclick="stepAll('pde')">Hammasini och</button></div></div>
-    <div id="pde-steps" class="steps"><div class="empty">Hisoblang.</div></div>
-  </div>
+  <step-box data-key="pde"></step-box>
 </section>
 </main>
-
-<footer>
-  <div><b>NumLab UZ v2.0 — Academic Edition</b></div>
-  <div>Muallif: Abdulaziz To‘lqinov • Andijon davlat universiteti • Amaliy matematika</div>
-  <div class="muted">Hisoblash → Qadamlar → Xatolik → Vizualizatsiya → Xulosa</div>
-</footer>
-<script>
-// NumLab UZ v2.0 — Academic Edition
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
-  });
-});
-function showAbout(){document.getElementById('about').classList.toggle('hidden')}
-function expr1(s){return new Function('x',`"use strict";return (${s});`)}
-function expr2(s){return new Function('x','y',`"use strict";return (${s});`)}
-function fmt(x){return Number.isFinite(x)?(+x.toFixed(10)).toString():String(x)}
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function parseNums(s){return s.split(/[\s,;]+/).filter(Boolean).map(Number)}
-function stepHTML(title,body,i){return `<div class="step-card" data-i="${i}"><div><span class="step-no">${i+1}</span><span class="step-title">${title}</span></div><div class="step-body">${body}</div></div>`}
-const stepState={};
-function setSteps(key,steps){
-  stepState[key]={steps,index:0};
-  const box=document.getElementById(key+'-steps');
-  box.innerHTML=steps.map((s,i)=>stepHTML(s.title,s.body,i)).join('');
-  renderSteps(key);
-}
-function renderSteps(key){
-  const st=stepState[key]; if(!st)return;
-  document.querySelectorAll(`#${key}-steps .step-card`).forEach((el,i)=>el.classList.toggle('visible',i<=st.index));
-}
-function stepNext(key){const st=stepState[key];if(!st)return;st.index=Math.min(st.index+1,st.steps.length-1);renderSteps(key)}
-function stepPrev(key){const st=stepState[key];if(!st)return;st.index=Math.max(st.index-1,0);renderSteps(key)}
-function stepAll(key){const st=stepState[key];if(!st)return;st.index=st.steps.length-1;renderSteps(key)}
-
-function drawAxes(ctx,w,h,xmin,xmax,ymin,ymax){
-  ctx.clearRect(0,0,w,h);ctx.strokeStyle='#d7dee9';ctx.lineWidth=1;
-  const X=x=>45+(x-xmin)/(xmax-xmin)*(w-65),Y=y=>h-32-(y-ymin)/(ymax-ymin)*(h-52);
-  if(ymin<=0&&ymax>=0){ctx.beginPath();ctx.moveTo(45,Y(0));ctx.lineTo(w-20,Y(0));ctx.stroke()}
-  if(xmin<=0&&xmax>=0){ctx.beginPath();ctx.moveTo(X(0),18);ctx.lineTo(X(0),h-32);ctx.stroke()}
-  return {X,Y};
-}
-function plotFunction(canvas,f,xmin,xmax,points=[]){
-  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
-  let vals=[];
-  for(let i=0;i<=400;i++){const x=xmin+(xmax-xmin)*i/400;try{const y=f(x);if(Number.isFinite(y))vals.push(y)}catch{}}
-  if(!vals.length)return;
-  let ymin=Math.min(...vals),ymax=Math.max(...vals);if(ymin===ymax){ymin--;ymax++}
-  const p=(ymax-ymin)*.15;ymin-=p;ymax+=p;const {X,Y}=drawAxes(ctx,w,h,xmin,xmax,ymin,ymax);
-  ctx.strokeStyle='#2563eb';ctx.lineWidth=2;ctx.beginPath();let started=false;
-  for(let i=0;i<=700;i++){const x=xmin+(xmax-xmin)*i/700;let y;try{y=f(x)}catch{continue}if(!Number.isFinite(y))continue;started?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y));started=true}ctx.stroke();
-  ctx.fillStyle='#dc2626';points.forEach(p=>{ctx.beginPath();ctx.arc(X(p.x),Y(p.y),4,0,Math.PI*2);ctx.fill()})
-}
-function table(headers,rows){return `<table class="compare-table"><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</table>`}
-
-// ROOTS
-function calcRoot(method,f,a,b,eps,max){
-  let rows=[],x;
-  if(method==='bisection'){
-    let fa=f(a),fb=f(b);if(fa*fb>0)throw new Error('Bisection uchun f(a)·f(b)<0 shart bajarilmadi.');
-    for(let k=1;k<=max;k++){x=(a+b)/2;const fx=f(x),err=Math.abs(b-a)/2;rows.push({k,a,b,x,fx,err});if(Math.abs(fx)<eps||err<eps)break;if(fa*fx<=0){b=x;fb=fx}else{a=x;fa=fx}}
-  }else if(method==='newton'){
-    x=(a+b)/2;
-    for(let k=1;k<=max;k++){const h=1e-6*(1+Math.abs(x)),fx=f(x),d=(f(x+h)-f(x-h))/(2*h);if(Math.abs(d)<1e-14)throw new Error('Hosila juda kichik.');const nx=x-fx/d,err=Math.abs(nx-x);rows.push({k,x,fx,d,nx,err});x=nx;if(err<eps||Math.abs(f(x))<eps)break}
-  }else{
-    let x0=a,x1=b;
-    for(let k=1;k<=max;k++){const f0=f(x0),f1=f(x1),den=f1-f0;if(Math.abs(den)<1e-14)throw new Error('Secant maxraji nolga yaqin.');x=x1-f1*(x1-x0)/den;const err=Math.abs(x-x1);rows.push({k,x0,x1,f0,f1,x,err});x0=x1;x1=x;if(err<eps||Math.abs(f(x))<eps)break}
-  }
-  return {root:method==='newton'?rows.at(-1).nx:rows.at(-1).x,rows};
-}
-function solveRoot(method){
-  let f;try{f=expr1(document.getElementById('root-f').value)}catch{return alert('f(x) ifodasi noto‘g‘ri')}
-  const a=+rootA(),b=+rootB(),eps=+document.getElementById('root-eps').value,max=+document.getElementById('root-max').value;
-  try{
-    const r=calcRoot(method,f,a,b,eps,max),root=r.root;
-    document.getElementById('root-summary').innerHTML=`<b>${methodName(method)}</b><br>Ildiz ≈ <b>${fmt(root)}</b><br>|f(x)| = ${fmt(Math.abs(f(root)))}<br>Iteratsiyalar: <b>${r.rows.length}</b>`;
-    const steps=[{title:'Boshlang‘ich ma’lumotlar',body:`<div class="math">f(x) = ${esc(document.getElementById('root-f').value)}\n[a,b]=[${fmt(a)}, ${fmt(b)}]\nε=${fmt(eps)}</div>`}];
-    r.rows.forEach(o=>{
-      if(method==='bisection')steps.push({title:`${o.k}-iteratsiya`,body:`<div class="math">x=(${fmt(o.a)}+${fmt(o.b)})/2 = ${fmt(o.x)}\nf(x)=${fmt(o.fx)}\nxatolik ≤ ${fmt(o.err)}</div><div>${Math.abs(o.fx)<eps||o.err<eps?'<b>To‘xtash sharti bajarildi.</b>':'Ildiz ishora almashadigan yarim intervalda qoldiriladi.'}</div>`});
-      else if(method==='newton')steps.push({title:`${o.k}-iteratsiya`,body:`<div class="math">xₖ=${fmt(o.x)}\nf(xₖ)=${fmt(o.fx)}\nf′(xₖ)≈${fmt(o.d)}\nxₖ₊₁=xₖ−f/f′=${fmt(o.nx)}\n|Δx|=${fmt(o.err)}</div>`});
-      else steps.push({title:`${o.k}-iteratsiya`,body:`<div class="math">x₀=${fmt(o.x0)}, x₁=${fmt(o.x1)}\nf₀=${fmt(o.f0)}, f₁=${fmt(o.f1)}\nx₂=${fmt(o.x)}\n|Δx|=${fmt(o.err)}</div>`});
-    });
-    steps.push({title:'Yakuniy tekshiruv',body:`Topilgan ildiz <b>x≈${fmt(root)}</b>. Tekshiruv: <b>|f(x)|=${fmt(Math.abs(f(root)))}</b>. Bu qiymat ε=${fmt(eps)} bilan solishtiriladi.`});
-    setSteps('root',steps);plotFunction(document.getElementById('root-canvas'),f,a,b,[{x:root,y:0}]);
-  }catch(e){document.getElementById('root-summary').innerHTML='<b>Xato:</b> '+esc(e.message)}
-}
-function rootA(){return document.getElementById('root-a').value}function rootB(){return document.getElementById('root-b').value}
-function methodName(m){return ({bisection:'Bisection',newton:'Newton',secant:'Secant'})[m]||m}
-function compareRoots(){
-  let f;try{f=expr1(document.getElementById('root-f').value)}catch{return}
-  const a=+rootA(),b=+rootB(),eps=+document.getElementById('root-eps').value,max=+document.getElementById('root-max').value;
-  let rows=[];['bisection','newton','secant'].forEach(m=>{try{const r=calcRoot(m,f,a,b,eps,max);rows.push([methodName(m),fmt(r.root),r.rows.length,fmt(Math.abs(f(r.root)))])}catch(e){rows.push([methodName(m),'—','—',esc(e.message)])}});
-  const box=document.getElementById('root-compare');box.classList.remove('hidden');box.innerHTML='<h3>Metodlar taqqoslanishi</h3>'+table(['Usul','Ildiz','Iteratsiya','|f(x)|'],rows)+'<p class="muted">Kam iteratsiya har doim ham “eng yaxshi” degani emas: boshlang‘ich yaqinlashish va barqarorlik ham muhim.</p>';
-}
-
-// GAUSS
-function parseMatrix(s){return s.trim().split(/\n+/).map(r=>r.trim().split(/[\s,;]+/).map(Number))}
-function matrixText(M){return M.map(r=>r.map(v=>fmt(v).padStart(11)).join(' ')).join('\n')}
-function solveGauss(){
-  let original=parseMatrix(document.getElementById('gauss-mat').value),M=original.map(r=>r.slice()),n=M.length;
-  if(!n||M.some(r=>r.length!==n+1||r.some(v=>!Number.isFinite(v))))return alert('n×(n+1) kengaytirilgan matritsa kiriting.');
-  const steps=[{title:'Kengaytirilgan matritsa tuzildi',body:`<div class="matrix">${esc(matrixText(M))}</div>`}];
-  for(let k=0;k<n;k++){
-    let p=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;
-    if(Math.abs(M[p][k])<1e-14){document.getElementById('gauss-summary').innerHTML='Sistema yagona yechimga ega emas.';return}
-    if(p!==k){[M[p],M[k]]=[M[k],M[p]];steps.push({title:`Tayanch satr almashtirildi`,body:`|a| eng katta satr tanlandi: R${k+1} ↔ R${p+1}<div class="matrix">${esc(matrixText(M))}</div>`})}
-    for(let i=k+1;i<n;i++){
-      const m=M[i][k]/M[k][k];for(let j=k;j<=n;j++)M[i][j]-=m*M[k][j];
-      steps.push({title:`a${i+1}${k+1} elementi nol qilindi`,body:`<div class="math">m = a${i+1}${k+1}/a${k+1}${k+1} = ${fmt(m)}\nR${i+1} ← R${i+1} − (${fmt(m)})R${k+1}</div><div class="matrix">${esc(matrixText(M))}</div>`});
-    }
-  }
-  const x=Array(n).fill(0);for(let i=n-1;i>=0;i--){let s=M[i][n];for(let j=i+1;j<n;j++)s-=M[i][j]*x[j];x[i]=s/M[i][i];steps.push({title:`Teskari yurish: x${i+1}`,body:`<div class="math">x${i+1} = ${fmt(x[i])}</div>`})}
-  let maxRes=0;for(let i=0;i<n;i++){let lhs=0;for(let j=0;j<n;j++)lhs+=original[i][j]*x[j];maxRes=Math.max(maxRes,Math.abs(lhs-original[i][n]))}
-  document.getElementById('gauss-summary').innerHTML=x.map((v,i)=>`x<sub>${i+1}</sub> = <b>${fmt(v)}</b>`).join('<br>');
-  document.getElementById('gauss-check').innerHTML=`Tekshiruv: max residual ‖Ax−b‖∞ = <b>${fmt(maxRes)}</b>`;
-  steps.push({title:'Tekshiruv',body:`Topilgan x vektorini boshlang‘ich sistemaga qo‘ydik. Maksimal residual: <b>${fmt(maxRes)}</b>. Nolga yaqin bo‘lsa yechim to‘g‘ri.`});setSteps('gauss',steps)
-}
-
-// INTERPOLATION
-function lagrangeVal(xs,ys,x){let sum=0;for(let i=0;i<xs.length;i++){let L=1;for(let j=0;j<xs.length;j++)if(i!==j)L*=((x-xs[j])/(xs[i]-xs[j]));sum+=ys[i]*L}return sum}
-function newtonCoeffs(xs,ys){let c=ys.slice(),n=xs.length;for(let j=1;j<n;j++)for(let i=n-1;i>=j;i--)c[i]=(c[i]-c[i-1])/(xs[i]-xs[i-j]);return c}
-function newtonVal(xs,c,x){let s=c[c.length-1];for(let i=c.length-2;i>=0;i--)s=s*(x-xs[i])+c[i];return s}
-function solveInterp(method){
-  const xs=parseNums(document.getElementById('ix').value),ys=parseNums(document.getElementById('iy').value),t=+document.getElementById('itarget').value;
-  if(xs.length!==ys.length||xs.length<2)return alert('x va y sonlari teng va kamida 2 ta bo‘lsin.');
-  const c=newtonCoeffs(xs,ys),val=method==='lagrange'?lagrangeVal(xs,ys,t):newtonVal(xs,c,t),steps=[{title:'Tugunlar tayyorlandi',body:`${table(['i','xᵢ','yᵢ'],xs.map((x,i)=>[i,fmt(x),fmt(ys[i])]))}`}];
-  if(method==='lagrange'){
-    let terms=[];
-    for(let i=0;i<xs.length;i++){let L=1,parts=[];for(let j=0;j<xs.length;j++)if(i!==j){const q=(t-xs[j])/(xs[i]-xs[j]);L*=q;parts.push(`(${fmt(t)}−${fmt(xs[j])})/(${fmt(xs[i])}−${fmt(xs[j])})`)}terms.push(ys[i]*L);steps.push({title:`L${i}(x*) bazis ko‘phadi`,body:`<div class="math">L${i}(${fmt(t)}) = ${parts.join(' × ')} = ${fmt(L)}\ny${i}L${i} = ${fmt(ys[i])}×${fmt(L)} = ${fmt(ys[i]*L)}</div>`})}
-    steps.push({title:'Hadlar yig‘ildi',body:`<div class="math">P(x*) = ${terms.map(fmt).join(' + ')} = ${fmt(val)}</div>`});
-  }else{
-    steps.push({title:'Bo‘lingan ayirmalar hisoblandi',body:`<div class="math">${c.map((v,i)=>`a${i} = ${fmt(v)}`).join('\n')}</div>`});
-    let s=`P(x)=a₀`;for(let i=1;i<c.length;i++)s+=` + a${i}`+xs.slice(0,i).map(v=>`(x−${fmt(v)})`).join('');
-    steps.push({title:'Newton ko‘phadi tuzildi',body:`<div class="math">${esc(s)}\nP(${fmt(t)}) = ${fmt(val)}</div>`});
-  }
-  document.getElementById('interp-summary').innerHTML=`<b>${method==='lagrange'?'Lagrange':'Newton'}</b><br>P(${fmt(t)}) ≈ <b>${fmt(val)}</b><br>Tugunlar soni: ${xs.length}`;
-  steps.push({title:'Tugunlarda tekshiruv',body:'Interpolatsion ko‘phad har bir berilgan tugunda aynan yᵢ qiymatini beradi. Grafikdagi qizil nuqtalar shu shartni ko‘rsatadi.'});setSteps('interp',steps);
-  const f=x=>method==='lagrange'?lagrangeVal(xs,ys,x):newtonVal(xs,c,x);plotFunction(document.getElementById('interp-canvas'),f,Math.min(...xs),Math.max(...xs),xs.map((x,i)=>({x,y:ys[i]})).concat([{x:t,y:val}]))
-}
-function chebDemo(){
-  const n=7,a=-1,b=1,xs=[];for(let k=1;k<=n;k++)xs.push((a+b)/2+(b-a)/2*Math.cos((2*k-1)*Math.PI/(2*n)));
-  const ys=xs.map(x=>1/(1+25*x*x));document.getElementById('ix').value=xs.map(x=>fmt(x)).join(',');document.getElementById('iy').value=ys.map(y=>fmt(y)).join(',');document.getElementById('itarget').value=0.8;solveInterp('lagrange');
-  const st=stepState.interp;st.steps.unshift({title:'Chebishev tugunlari tanlandi',body:'Chebishev tugunlari interval chetlarida zichroq joylashadi. Bu yuqori darajali interpolatsiyada Runge tebranishini kamaytirishga yordam beradi.'});st.index=0;document.getElementById('interp-steps').innerHTML=st.steps.map((s,i)=>stepHTML(s.title,s.body,i)).join('');renderSteps('interp')
-}
-
-// INTEGRAL
-function integralMethod(f,a,b,n,method,needParts=false){
-  if(n<1)throw new Error('n musbat bo‘lishi kerak.');let h=(b-a)/n,parts=[],value;
-  if(method==='rect'){let s=0;for(let i=0;i<n;i++){const x=a+(i+.5)*h,y=f(x);s+=y;if(needParts)parts.push({i,x,y})}value=s*h}
-  if(method==='trap'){let s=.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);value=s*h}
-  if(method==='simpson'){if(n%2)n++;h=(b-a)/n;let s=f(a)+f(b);for(let i=1;i<n;i++)s+=(i%2?4:2)*f(a+i*h);value=s*h/3}
-  return {value,n,h,parts};
-}
-function intName(m){return ({rect:'O‘rta to‘g‘ri to‘rtburchak',trap:'Trapetsiya',simpson:'Simpson'})[m]}
-function solveIntegral(method){
-  let f;try{f=expr1(document.getElementById('int-f').value)}catch{return alert('f(x) noto‘g‘ri')}
-  const a=+document.getElementById('int-a').value,b=+document.getElementById('int-b').value,n=+document.getElementById('int-n').value,r=integralMethod(f,a,b,n,method,true);
-  document.getElementById('int-summary').innerHTML=`<b>${intName(method)}</b><br>I ≈ <b>${fmt(r.value)}</b><br>n=${r.n}, h=${fmt(r.h)}`;
-  const steps=[{title:'Oraliq bo‘lindi',body:`<div class="math">[a,b]=[${fmt(a)},${fmt(b)}]\nn=${r.n}\nh=(b−a)/n=${fmt(r.h)}</div>`}];
-  if(method==='rect'){
-    r.parts.slice(0,20).forEach(p=>steps.push({title:`${p.i+1}-bo‘lak`,body:`<div class="math">x*=${fmt(p.x)}\nf(x*)=${fmt(p.y)}\nSᵢ≈h·f(x*)=${fmt(r.h*p.y)}</div>`}));
-    if(r.parts.length>20)steps.push({title:'Qolgan bo‘laklar',body:`Yana ${r.parts.length-20} ta bo‘lak xuddi shu formula bilan hisoblandi.`})
-  }else if(method==='trap'){
-    steps.push({title:'Tugun qiymatlari olindi',body:`<div class="math">${Array.from({length:Math.min(r.n+1,15)},(_,i)=>`x${i}=${fmt(a+i*r.h)}, f=${fmt(f(a+i*r.h))}`).join('\n')}</div>`});
-    steps.push({title:'Trapetsiya formulasi qo‘llandi',body:`<div class="math">I≈h[(f₀+fₙ)/2 + Σfᵢ]\nI≈${fmt(r.value)}</div>`})
-  }else{
-    steps.push({title:'Simpson og‘irliklari',body:'Chekka nuqtalar 1, toq indekslar 4, juft ichki indekslar 2 koeffitsiyent bilan olinadi.'});
-    steps.push({title:'Simpson formulasi',body:`<div class="math">I≈h/3[f₀+fₙ+4Σf_toq+2Σf_juft]\nI≈${fmt(r.value)}</div>`})
-  }
-  const ns=[4,8,16,32,64],vals=ns.map(k=>integralMethod(f,a,b,k,method).value);
-  steps.push({title:'Konvergentsiya tekshirildi',body:table(['n','Iₙ','|Iₙ−Iold|'],ns.map((k,i)=>[k,fmt(vals[i]),i?fmt(Math.abs(vals[i]-vals[i-1])):'—']))});
-  setSteps('int',steps);plotFunction(document.getElementById('int-canvas'),f,a,b,[])
-}
-function compareIntegrals(){
-  let f;try{f=expr1(document.getElementById('int-f').value)}catch{return}
-  const a=+document.getElementById('int-a').value,b=+document.getElementById('int-b').value,n=+document.getElementById('int-n').value;
-  const rows=['rect','trap','simpson'].map(m=>{const r=integralMethod(f,a,b,n,m);return[intName(m),r.n,fmt(r.h),fmt(r.value)]});
-  const box=document.getElementById('int-compare');box.classList.remove('hidden');box.innerHTML='<h3>Bir xil shartda metodlar</h3>'+table(['Usul','n','h','Natija'],rows)
-}
-
-// ODE
-function calcODE(method,f,x0,y0,x1,h){
-  let x=x0,y=y0,rows=[{k:0,x,y}],details=[];let k=0;
-  while(x<x1-1e-12&&k<10000){const hh=Math.min(h,x1-x);let yn,d={};
-    if(method==='euler'){const slope=f(x,y);yn=y+hh*slope;d={slope}}
-    else{const k1=f(x,y),k2=f(x+hh/2,y+hh*k1/2),k3=f(x+hh/2,y+hh*k2/2),k4=f(x+hh,y+hh*k3);yn=y+hh*(k1+2*k2+2*k3+k4)/6;d={k1,k2,k3,k4}}
-    details.push({k:k+1,x,y,hh,yn,...d});x+=hh;y=yn;k++;rows.push({k,x,y})
-  }return {rows,details,final:y}
-}
-function solveODE(method){
-  let f;try{f=expr2(document.getElementById('ode-f').value)}catch{return alert('f(x,y) noto‘g‘ri')}
-  const x0=+document.getElementById('ode-x0').value,y0=+document.getElementById('ode-y0').value,x1=+document.getElementById('ode-x1').value,h=+document.getElementById('ode-h').value,r=calcODE(method,f,x0,y0,x1,h);
-  document.getElementById('ode-summary').innerHTML=`<b>${method==='euler'?'Eyler':'Runge–Kutta 4'}</b><br>y(${fmt(x1)}) ≈ <b>${fmt(r.final)}</b><br>Qadamlar: ${r.details.length}`;
-  const steps=[{title:'Boshlang‘ich shart',body:`<div class="math">y′=${esc(document.getElementById('ode-f').value)}\ny(${fmt(x0)})=${fmt(y0)}\nh=${fmt(h)}</div>`}];
-  r.details.forEach(d=>{
-    const body=method==='euler'?`<div class="math">x=${fmt(d.x)}, y=${fmt(d.y)}\nf(x,y)=${fmt(d.slope)}\ny_new = y+h·f = ${fmt(d.yn)}</div>`:`<div class="math">k₁=${fmt(d.k1)}\nk₂=${fmt(d.k2)}\nk₃=${fmt(d.k3)}\nk₄=${fmt(d.k4)}\ny_new=y+h(k₁+2k₂+2k₃+k₄)/6=${fmt(d.yn)}</div>`;
-    steps.push({title:`${d.k}-qadam`,body})
-  });
-  steps.push({title:'Yakuniy qiymat',body:`x=${fmt(x1)} nuqtada y≈<b>${fmt(r.final)}</b>. Kichikroq h bilan natijani solishtirish metod aniqligini baholashga yordam beradi.`});setSteps('ode',steps);plotODE(r.rows)
-}
-function plotODE(rows){
-  const c=document.getElementById('ode-canvas'),ctx=c.getContext('2d'),w=c.width,h=c.height,xs=rows.map(p=>p.x),ys=rows.map(p=>p.y);let ymin=Math.min(...ys),ymax=Math.max(...ys);if(ymin===ymax){ymin--;ymax++}const p=(ymax-ymin)*.15;ymin-=p;ymax+=p;const A=drawAxes(ctx,w,h,Math.min(...xs),Math.max(...xs),ymin,ymax);ctx.strokeStyle='#2563eb';ctx.lineWidth=2;ctx.beginPath();rows.forEach((p,i)=>i?ctx.lineTo(A.X(p.x),A.Y(p.y)):ctx.moveTo(A.X(p.x),A.Y(p.y)));ctx.stroke();ctx.fillStyle='#dc2626';rows.forEach(p=>{ctx.beginPath();ctx.arc(A.X(p.x),A.Y(p.y),3,0,Math.PI*2);ctx.fill()})
-}
-function compareODE(){
-  let f;try{f=expr2(document.getElementById('ode-f').value)}catch{return}
-  const x0=+document.getElementById('ode-x0').value,y0=+document.getElementById('ode-y0').value,x1=+document.getElementById('ode-x1').value,h=+document.getElementById('ode-h').value,e=calcODE('euler',f,x0,y0,x1,h),r=calcODE('rk4',f,x0,y0,x1,h);
-  const box=document.getElementById('ode-compare');box.classList.remove('hidden');box.innerHTML='<h3>Eyler va RK4 taqqoslanishi</h3>'+table(['Usul','Qadamlar','y(x oxiri)'],[['Eyler',e.details.length,fmt(e.final)],['RK4',r.details.length,fmt(r.final)]])+'<p class="muted">Bir xil h da RK4 odatda yuqoriroq tartibli aniqlikka ega.</p>'
-}
-
-// PDE
-function solvePDE(){
-  let N=Math.max(4,Math.min(40,+document.getElementById('pde-n').value)),top=+document.getElementById('pde-top').value,other=+document.getElementById('pde-other').value,eps=+document.getElementById('pde-eps').value;
-  let u=Array.from({length:N},()=>Array(N).fill(other));for(let j=0;j<N;j++)u[0][j]=top;
-  let iter=0,err=Infinity,snapshots=[],milestones=new Set([1,2,5,10,25,50,100,250,500,1000,2500,5000,10000]);
-  while(err>eps&&iter<20000){let v=u.map(r=>r.slice());err=0;for(let i=1;i<N-1;i++)for(let j=1;j<N-1;j++){v[i][j]=(u[i-1][j]+u[i+1][j]+u[i][j-1]+u[i][j+1])/4;err=Math.max(err,Math.abs(v[i][j]-u[i][j]))}u=v;iter++;if(milestones.has(iter)||err<=eps)snapshots.push({iter,err,center:u[Math.floor(N/2)][Math.floor(N/2)]})}
-  document.getElementById('pde-summary').innerHTML=`Iteratsiya: <b>${iter}</b><br>max |Δu| = <b>${fmt(err)}</b><br>Markaz u ≈ <b>${fmt(u[Math.floor(N/2)][Math.floor(N/2)])}</b>`;
-  const steps=[{title:'To‘r va chegara shartlari',body:`<div class="math">N=${N}\nYuqori chegara=${fmt(top)}\nQolgan chegaralar=${fmt(other)}\nε=${fmt(eps)}</div>`},{title:'Diskret formula',body:'<div class="math">uᵢⱼ(new) = [uᵢ₋₁ⱼ + uᵢ₊₁ⱼ + uᵢⱼ₋₁ + uᵢⱼ₊₁] / 4</div>Har ichki tugun to‘rtta qo‘shnisining o‘rtacha qiymati bilan yangilanadi.'}];
-  snapshots.forEach(s=>steps.push({title:`${s.iter}-iteratsiya`,body:`<div class="math">max |Δu| = ${fmt(s.err)}\nmarkaz u = ${fmt(s.center)}</div>${s.err<=eps?'<b>To‘xtash sharti bajarildi.</b>':'Yechim hali yaqinlashmoqda.'}`}));
-  steps.push({title:'Yakuniy xulosa',body:`Jacobi usuli <b>${iter}</b> iteratsiyada ε=${fmt(eps)} aniqlik mezoniga yetdi.`});setSteps('pde',steps);drawHeatmap(u)
-}
-function drawHeatmap(u){
-  const c=document.getElementById('pde-canvas'),ctx=c.getContext('2d'),w=c.width,h=c.height,N=u.length;ctx.clearRect(0,0,w,h);const maxv=Math.max(...u.flat()),minv=Math.min(...u.flat()),d=maxv-minv||1,cw=w/N,ch=h/N;
-  for(let i=0;i<N;i++)for(let j=0;j<N;j++){const t=(u[i][j]-minv)/d;ctx.fillStyle=`rgb(${Math.floor(240*t+15)},${Math.floor(80+120*(1-Math.abs(t-.5)*2))},${Math.floor(240*(1-t)+15)})`;ctx.fillRect(j*cw,i*ch,cw+1,ch+1)}
-}
-
-</script>
+<footer><b>NumLab UZ v3.0</b> • Abdulaziz To‘lqinov • Andijon davlat universiteti • Amaliy matematika<br><span class="muted">Kiritish → Normalizatsiya → Algoritm → Qadamlar → Tekshiruv → Xulosa</span></footer>
+<script src="app.js"></script>
 </body>
 </html>
