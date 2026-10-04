@@ -20,5 +20,6 @@ jobs:
           node --check subjects/pde/pde.js
           node --check subjects/functional-analysis/fa.js
           node --check subjects/python/python.js
+          node --check subjects/problem-solving/practice.js
       - name: Numerical smoke tests
         run: node tests/smoke.js
