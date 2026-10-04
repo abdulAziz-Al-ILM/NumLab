@@ -18,20 +18,25 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function table(headers,rows){return `<table class="compare-table"><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</table>`}
 
 // ---------- Expression engine ----------
-const FN=['sin','cos','tan','asin','acos','atan','sqrt','abs','exp','ln','log','floor','ceil','round','sinh','cosh','tanh'];
+const FN=['sin','cos','tan','asin','acos','atan','sqrt','abs','exp','ln','log','log10','floor','ceil','round','sinh','cosh','tanh'];
 function superscriptsToPowers(s){
   const map={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9'};
   return s.replace(/([xy)])([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g,(_,v,p)=>v+'^'+[...p].map(c=>map[c]).join(''));
 }
 function normalizeExpr(raw,vars=['x']){
   let s=String(raw).trim(); if(!s) throw new Error('Ifoda bo‘sh.');
-  s=s.replace(/−/g,'-').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/π/gi,'pi').replace(/√\s*\(/g,'sqrt(').replace(/√\s*([xy]|\d+(?:\.\d+)?)/g,'sqrt($1)');
+  s=s.replace(/−/g,'-').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/π/gi,'pi')
+   .replace(/\barctg\b/gi,'atan').replace(/\barctan\b/gi,'atan').replace(/\btg\b/gi,'tan').replace(/\bctg\b/gi,'cot')
+   .replace(/\blg\b/gi,'log10')
+   .replace(/√\s*\(/g,'sqrt(').replace(/√\s*([xy]|\d+(?:\.\d+)?)/g,'sqrt($1)');
+  s=s.replace(/\|([^|]+)\|/g,'abs($1)');
+  s=s.replace(/\bcot\s*\(([^()]+)\)/gi,'(1/tan($1))').replace(/\bcot\s+([xy])/gi,'(1/tan($1))');
   s=superscriptsToPowers(s).replace(/Math\./g,'').replace(/,/g,'.');
   const eq=s.split('='); if(eq.length===2) s=`(${eq[0]})-(${eq[1]})`; else if(eq.length>2) throw new Error('Bitta tenglik belgisi ishlating.');
   s=s.replace(/\^/g,'**');
   const fnRe=FN.join('|');
   s=s.replace(new RegExp(`\\b(${fnRe})\\s+([xy])\\b`,'gi'),'$1($2)');
-  s=s.replace(/\bln\s*\(/gi,'log(');
+  s=s.replace(/\bln\s*\(/gi,'log(').replace(/\blog10\s*\(/gi,'log10(');
   s=s.replace(/(\d|\)|x|y)\s*(?=(x|y|\())/g,'$1*');
   s=s.replace(/(\d|\)|x|y)\s*(?=(sin|cos|tan|asin|acos|atan|sqrt|abs|exp|log|floor|ceil|round|sinh|cosh|tanh)\s*\()/gi,'$1*');
   s=s.replace(/\)\s*(?=\d)/g,')*');
@@ -45,7 +50,7 @@ function normalizeExpr(raw,vars=['x']){
 function compileExpr(raw,vars=['x']){
   const s=normalizeExpr(raw,vars);
   const args=[...vars,'PI','E',...FN.filter(x=>x!=='ln')];
-  const values=[Math.PI,Math.E,...FN.filter(x=>x!=='ln').map(n=>Math[n]||Math.log)];
+  const values=[Math.PI,Math.E,...FN.filter(x=>x!=='ln').map(n=>n==='log10'?Math.log10:(Math[n]||Math.log))];
   const fn=new Function(...args,`"use strict";return (${s});`);
   return (...vv)=>fn(...vv,...values);
 }
@@ -140,7 +145,16 @@ function drawRootVisual(){
 }
 
 
-function findBracket(f,a,b){let lo=Math.min(a,b),hi=Math.max(a,b);let fa=f(lo),fb=f(hi);if(Number.isFinite(fa)&&Number.isFinite(fb)&&fa*fb<=0)return[lo,hi];let center=(lo+hi)/2,span=Math.max(1,hi-lo);for(let level=0;level<8;level++){let L=center-span,R=center+span,prevX=L,prevY;try{prevY=f(L)}catch{prevY=NaN}for(let i=1;i<=400;i++){let x=L+(R-L)*i/400,y;try{y=f(x)}catch{y=NaN}if(Number.isFinite(prevY)&&Number.isFinite(y)&&prevY*y<=0)return[prevX,x];prevX=x;prevY=y}span*=2}return null}
+function findBracket(f,a,b){let lo=Math.min(a,b),hi=Math.max(a,b);const sane=(x,y)=>Number.isFinite(y)&&Math.abs(y)<1e12;let fa,fb;try{fa=f(lo);fb=f(hi)}catch{fa=fb=NaN}
+if(sane(lo,fa)&&sane(hi,fb)&&fa*fb<=0){const mid=(lo+hi)/2,fm=f(mid);if(sane(mid,fm)&&Math.abs(fm)<=Math.max(Math.abs(fa),Math.abs(fb))*10+1)return[lo,hi]}
+let center=(lo+hi)/2,span=Math.max(1,hi-lo),best=null;
+for(let level=0;level<8;level++){let L=center-span,R=center+span,prevX=L,prevY;try{prevY=f(L)}catch{prevY=NaN}
+for(let i=1;i<=800;i++){const x=L+(R-L)*i/800;let y;try{y=f(x)}catch{y=NaN}
+if(sane(prevX,prevY)&&sane(x,y)){if(Math.abs(y)<1e-8)best=[Math.max(L,x-(R-L)/800),Math.min(R,x+(R-L)/800)];
+if(prevY*y<=0){const m=(prevX+x)/2;let fm;try{fm=f(m)}catch{fm=NaN}
+if(sane(m,fm)&&Math.abs(fm)<=Math.max(Math.abs(prevY),Math.abs(y))*10+1)return[prevX,x]}}
+prevX=x;prevY=y}
+if(best)return best;span*=2}return null}
 function calcRoot(method,f,a,b,eps,max){const rows=[];if(method==='bisection'){const br=findBracket(f,a,b);if(!br)throw new Error('Belgilangan va kengaytirilgan oraliqda ishora almashishi topilmadi. Teng ikkiga bo‘lish usuli real ildizni qamragan interval talab qiladi.');[a,b]=br;let fa=f(a);for(let k=1;k<=max;k++){const x=(a+b)/2,fx=f(x),err=Math.abs(b-a)/2;rows.push({k,a,b,x,fx,err});if(Math.abs(fx)<eps||err<eps)return{root:x,rows,bracket:br};if(fa*fx<=0)b=x;else{a=x;fa=fx}}return{root:rows.at(-1).x,rows,bracket:br}}
 if(method==='newton'){let x=(a+b)/2;for(let k=1;k<=max;k++){const h=1e-6*(1+Math.abs(x)),fx=f(x),d=(f(x+h)-f(x-h))/(2*h);if(!Number.isFinite(d)||Math.abs(d)<1e-14)throw new Error('Newton uchun hosila 0 ga juda yaqinlashdi. Boshlang‘ich oraliqni o‘zgartiring.');const nx=x-fx/d,err=Math.abs(nx-x);rows.push({k,x,fx,d,nx,err});x=nx;if(!Number.isFinite(x))throw new Error('Newton iteratsiyasi sonli sohadan chiqib ketdi.');if(err<eps||Math.abs(f(x))<eps)return{root:x,rows}}return{root:x,rows}}
 if(method==='vatar'){const br=findBracket(f,a,b);if(!br)throw new Error('Vatarlar usuli uchun ildizni qamragan [a,b] interval topilmadi.');[a,b]=br;let fa=f(a),fb=f(b);for(let k=1;k<=max;k++){const den=fb-fa;if(!Number.isFinite(den)||Math.abs(den)<1e-14)throw new Error('Vatar formulasi maxraji 0 ga yaqinlashdi.');const x=(a*fb-b*fa)/den,fx=f(x),err=Math.min(Math.abs(x-a),Math.abs(b-x));rows.push({k,a,b,fa,fb,x,fx,err});if(Math.abs(fx)<eps||Math.abs(b-a)<eps)return{root:x,rows,bracket:br};if(fa*fx<=0){b=x;fb=fx}else{a=x;fa=fx}}return{root:rows.at(-1).x,rows,bracket:br}}
