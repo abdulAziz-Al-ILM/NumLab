@@ -1,1 +1,79 @@
-<!DOCTYPE html><html lang="uz"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Python dasturlash tili — MathLab</title><link rel="stylesheet" href="../../mathlab.css"></head><body><header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Python dasturlash tili</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header><main><section class="hero" style="padding-bottom:55px"><div class="pill">MODUL LOYIHASI</div><h1 style="font-size:clamp(40px,6vw,70px)">Python dasturlash tili</h1><p>Kodning faqat natijasini emas, kompyuter uni qanday bajarayotganini ko‘rsatadigan laboratoriya.</p></section><section class="section-title" style="padding-top:55px"><p>BUILD MAP</p><h2>Birinchi laboratoriyalar</h2></section><section class="subjects"><div class="subject"><div class="status build">REJADA</div><div class="num">01</div><h3>O‘zgaruvchi va tip</h3><p>Xotirada qiymat qanday saqlanadi, expression qanday hisoblanadi.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">02</div><h3>Shart operatorlari</h3><p>Program flow diagram bilan if/elif/else.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">03</div><h3>Sikllar</h3><p>Har iteratsiyada o‘zgaruvchilar holatini ko‘rish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">04</div><h3>Funksiyalar</h3><p>Call stack va parametrlar harakati.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">05</div><h3>Matematika bilan Python</h3><p>Newton, Gauss, integral va ODE algoritmlarini o‘zingiz yozish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div></section></main></body></html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python dasturlash — ILM Mizan MathLab</title>
+<link rel="stylesheet" href="../../mathlab.css"><link rel="stylesheet" href="python.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Python dasturlash tili</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header>
+<main>
+<section class="py-hero"><div class="pill">LIVE LAB • v1</div><h1>Python execution visualizer</h1><p>Kodni faqat ishga tushirmang. <b>Kompyuter uni qadam-baqadam qanday bajarayotganini ko‘ring.</b></p></section>
+<nav class="lab-tabs">
+<button class="lab-tab active" data-lab="runner">01 Kod bajarilishi</button>
+<button class="lab-tab" data-lab="loops">02 Sikl</button>
+<button class="lab-tab" data-lab="math">03 Matematik algoritm</button>
+<button class="lab-tab" data-lab="tasks">04 Mashqlar</button>
+</nav>
+
+<section id="runner" class="lab-panel active">
+<div class="lesson-standard">
+<article><span>G‘OYA</span><p>Dastur — satrlar ketma-ketligi emas, holatlarning o‘zgarishi.</p></article>
+<article><span>KO‘RINADIGAN NARSA</span><p>Har qadamda qaysi satr ishladi va o‘zgaruvchilar qanday o‘zgardi.</p></article>
+<article><span>CHEGARASI</span><p>Bu xavfsiz mini-Python subset; to‘liq Python interpreteri emas.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card">
+<h2>Kod</h2>
+<textarea id="code" rows="12">x = 2
+y = 3
+z = x + y
+print(z)</textarea>
+<div class="examples"><button onclick="loadExample('basic')">Oddiy</button><button onclick="loadExample('if')">if</button><button onclick="loadExample('loop')">for</button><button onclick="loadExample('newton')">Newton</button></div>
+<div class="buttons"><button onclick="runCode()">Tahlil qil</button><button class="secondary-btn" onclick="stepPrev()">←</button><button onclick="stepNext()">Keyingi →</button><button class="secondary-btn" onclick="playSteps()">▶</button></div>
+<div class="paper-box"><b>Qog‘ozda:</b> har satr yoniga o‘zgaruvchilar qiymatini yozib boring. Dastur bajarilishi aslida “state transition”lar ketma-ketligi.</div>
+</div>
+<div class="lab-card">
+<h2>Bajarilish holati</h2>
+<div id="current-line" class="current-line">Kodni ishga tushiring.</div>
+<div class="state-wrap"><div><h3>O‘zgaruvchilar</h3><div id="vars" class="state-box"></div></div><div><h3>Output</h3><pre id="output" class="state-box"></pre></div></div>
+<div id="explain" class="py-note"></div>
+</div>
+</div>
+</section>
+
+<section id="loops" class="lab-panel">
+<div class="lab-grid">
+<div class="lab-card"><h2>for sikli nimani qiladi?</h2><label>N <input id="loop-n" type="number" min="1" max="20" value="6"></label><button onclick="buildLoop()">Ko‘rsat</button><div class="paper-box"><b>Kod:</b><pre>sum = 0
+for i in range(N):
+    sum = sum + i</pre></div></div>
+<div class="lab-card"><h2>Iteratsiyalar</h2><div id="loop-table"></div><div class="py-note"><b>Intuitsiya:</b> sikl “bir ishni ko‘p marta” emas, “bir xil qoida bilan state’ni qayta-qayta yangilash”dir.</div></div>
+</div>
+</section>
+
+<section id="math" class="lab-panel">
+<div class="lesson-standard">
+<article><span>MATEMATIKA</span><p>Newton formulasi</p></article>
+<article><span>KOD</span><p>Formula siklga aylanadi.</p></article>
+<article><span>BOG‘LANISH</span><p>Sonli usuldagi iteratsiya = dasturdagi loop.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card"><h2>√2 ni Newton bilan topish</h2><label>x₀ <input id="newton-x0" type="number" step="0.1" value="1"></label><label>Iteratsiya <input id="newton-n" type="number" min="1" max="20" value="6"></label><button onclick="runNewton()">Ishla</button><div class="paper-box"><b>Formula:</b> xₙ₊₁ = ½(xₙ + 2/xₙ)</div></div>
+<div class="lab-card"><h2>Formula → kod → natija</h2><div id="newton-table"></div><div id="newton-note" class="py-note"></div></div>
+</div>
+</section>
+
+<section id="tasks" class="lab-panel">
+<div class="task-grid">
+<article><span>01</span><h3>Yig‘indi</h3><p>1 dan n gacha sonlar yig‘indisini sikl bilan toping.</p></article>
+<article><span>02</span><h3>Maximum</h3><p>Ro‘yxat ichidan eng katta sonni topish algoritmini yozing.</p></article>
+<article><span>03</span><h3>Bisection</h3><p>Teng ikkiga bo‘lish usulini Python’da yozing.</p></article>
+<article><span>04</span><h3>Gauss</h3><p>Matritsa satrlarini yangilash algoritmini yozing.</p></article>
+<article><span>05</span><h3>Euler</h3><p>y'=x+y uchun Eyler metodini implement qiling.</p></article>
+<article><span>06</span><h3>Mini loyiha</h3><p>MathLab’dagi bir algoritmni Python’da qayta yarating.</p></article>
+</div>
+</section>
+</main>
+<footer><b>ILM Mizan MathLab</b><span>Python • Execution Visualizer</span><small>Kod → Holat → Qadam → Algoritm</small></footer>
+<script src="python.js"></script>
+</body></html>
