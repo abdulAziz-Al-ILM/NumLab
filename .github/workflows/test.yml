@@ -1,0 +1,19 @@
+name: NumLab Tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Syntax check
+        run: node --check app.js
+      - name: Numerical smoke tests
+        run: node tests/smoke.js
