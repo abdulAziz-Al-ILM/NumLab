@@ -1,1 +1,54 @@
-<!DOCTYPE html><html lang="uz"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Masalalar yechish praktikumi — MathLab</title><link rel="stylesheet" href="../../mathlab.css"></head><body><header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Masalalar yechish praktikumi</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header><main><section class="hero" style="padding-bottom:55px"><div class="pill">MODUL LOYIHASI</div><h1 style="font-size:clamp(40px,6vw,70px)">Masalalar yechish praktikumi</h1><p>Javob beradigan emas, fikrlashga majbur qiladigan tutor rejimi.</p></section><section class="section-title" style="padding-top:55px"><p>BUILD MAP</p><h2>Birinchi laboratoriyalar</h2></section><section class="subjects"><div class="subject"><div class="status build">REJADA</div><div class="num">01</div><h3>Algebraik o‘zgartirish</h3><p>Ifodani ko‘rish, pattern tanish va to‘g‘ri transformatsiya.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">02</div><h3>Tenglama va tengsizlik</h3><p>Strategiya tanlashdan tekshiruvgacha.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">03</div><h3>Funksiya va grafik</h3><p>Formula ↔ grafik ↔ xossa bog‘lanishi.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">04</div><h3>Ketma-ketlik va qatorlar</h3><p>Pattern, limit va yig‘indi strategiyalari.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">05</div><h3>Tutor rejimi</h3><p>Mustaqil urinish → Hint 1 → Hint 2 → qadam → to‘liq yechim → o‘xshash masala.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div></section></main></body></html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Masalalar yechish praktikumi — ILM Mizan MathLab</title>
+<link rel="stylesheet" href="../../mathlab.css"><link rel="stylesheet" href="practice.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Masalalar yechish praktikumi</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header>
+<main>
+<section class="pr-hero"><div class="pill">LIVE TUTOR • v1</div><h1>Masalalar yechish praktikumi</h1><p>Javobni birdan bermaydigan tutor: <b>urin → hint → strategiya → qadam → tekshiruv → o‘xshash masala</b>.</p></section>
+
+<div class="tutor-shell">
+  <aside class="topic-list">
+    <button class="topic active" data-topic="factor">Algebraik ajratish</button>
+    <button class="topic" data-topic="quadratic">Kvadrat tenglama</button>
+    <button class="topic" data-topic="sequence">Ketma-ketlik</button>
+    <button class="topic" data-topic="function">Funksiya</button>
+  </aside>
+
+  <section class="tutor-main">
+    <div class="problem-card">
+      <div class="problem-head"><span id="problem-topic">Algebraik ajratish</span><button onclick="newProblem()">Yangi masala</button></div>
+      <h2 id="problem-text"></h2>
+      <p id="problem-goal" class="goal"></p>
+      <label>Javobingiz / urinish <textarea id="attempt" rows="4" placeholder="Avval o‘zingiz urinib ko‘ring..."></textarea></label>
+      <div class="buttons"><button onclick="checkAttempt()">Tekshir</button><button class="secondary-btn" onclick="showHint()">Hint</button><button class="secondary-btn" onclick="showNextStep()">Keyingi qadam</button><button class="secondary-btn" onclick="showSolution()">To‘liq yechim</button></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+
+    <div class="support-grid">
+      <div class="support-card"><h3>Hintlar</h3><div id="hints" class="empty">Hint so‘ramaguningizcha ochilmaydi.</div></div>
+      <div class="support-card"><h3>Strategiya</h3><div id="strategy" class="empty">Qadam so‘rang.</div></div>
+    </div>
+
+    <div class="solution-card">
+      <h3>Qadam-baqadam yechim</h3>
+      <div id="steps" class="steps"><div class="empty">To‘liq yechim yoki qadamlarni oching.</div></div>
+    </div>
+
+    <div class="reflection-card">
+      <h3>Masaladan keyin</h3>
+      <div class="reflection-grid">
+        <div><b>Nimani tanish kerak edi?</b><p id="pattern"></p></div>
+        <div><b>Eng ko‘p xato qayerda?</b><p id="mistake"></p></div>
+        <div><b>Qachon boshqa usul kerak?</b><p id="alternative"></p></div>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+<footer><b>ILM Mizan MathLab</b><span>Problem Solving Tutor</span><small>Urinish → Hint → Strategiya → Qadam → Transfer</small></footer>
+<script src="practice.js"></script>
+</body></html>
