@@ -22,7 +22,8 @@
   <button class="lab-tab active" data-lab="exp">01 Eksponensial</button>
   <button class="lab-tab" data-lab="logistic">02 Logistik</button>
   <button class="lab-tab" data-lab="sir">03 SIR</button>
-  <button class="lab-tab" data-lab="workshop">04 Model ustaxonasi</button>
+  <button class="lab-tab" data-lab="custom">04 O‘z modelingiz</button>
+  <button class="lab-tab" data-lab="workshop">05 Model ustaxonasi</button>
 </nav>
 
 <section id="exp" class="lab-panel active">
@@ -99,6 +100,36 @@
       <div id="sir-summary" class="model-summary"></div>
       <canvas id="sir-canvas" width="760" height="360"></canvas>
       <div id="sir-note" class="model-note"></div>
+    </div>
+  </div>
+</section>
+
+
+<section id="custom" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>UNIVERSAL ODE</span><p>y′ = f(t,y; parametrlar) ko‘rinishidagi o‘z modelingizni kiriting.</p></article>
+    <article><span>SIMULYATSIYA</span><p>Euler yoki RK4 bilan vaqt bo‘yicha yechim trayektoriyasi quriladi.</p></article>
+    <article><span>EKSPERIMENT</span><p>Parametrni o‘zgartirib model sezgirligini tekshiring.</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>O‘z differential modelingiz</h2>
+      <label>dy/dt = f(t,y) <input id="custom-eq" value="r*y*(1-y/K)"></label>
+      <label>Parametrlar <input id="custom-params" value="r=0.4, K=100"></label>
+      <label>y(0) <input id="custom-y0" type="number" value="5"></label>
+      <label>T <input id="custom-t" type="number" value="20"></label>
+      <label>h <input id="custom-h" type="number" step="0.01" value="0.05"></label>
+      <label>Usul <select id="custom-method"><option value="rk4">RK4</option><option value="euler">Euler</option></select></label>
+      <div class="examples"><button onclick="loadCustom('decay')">So‘nish</button><button onclick="loadCustom('logistic')">Logistik</button><button onclick="loadCustom('harvest')">Hosil yig‘ish</button><button onclick="loadCustom('forcing')">Tashqi kuch</button></div>
+      <button onclick="runCustomModel()">Simulyatsiya</button>
+      <div class="paper-box"><b>Qog‘ozda:</b> 1) o‘zgaruvchini aniqlang; 2) hosila nimaga bog‘liqligini yozing; 3) parametrlarni nomlang; 4) boshlang‘ich shart bering; 5) bir qadam formulani qo‘lda hisoblab ko‘ring.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Trayektoriya va tekshiruv</h2>
+      <div id="custom-summary" class="model-summary"></div>
+      <canvas id="custom-canvas" width="760" height="360"></canvas>
+      <div id="custom-note" class="model-note"></div>
+      <div id="custom-table" class="scroll-table"></div>
     </div>
   </div>
 </section>
