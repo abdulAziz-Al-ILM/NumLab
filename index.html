@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="NumLab UZ — sonli usullarni hisoblash, tushuntirish va vizuallashtirish uchun interaktiv laboratoriya." />
+<title>NumLab UZ — Sonli usullar laboratoriyasi</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div>
+    <h1>NumLab UZ</h1>
+    <p>Sonli usullarni hisoblash, tushuntirish va vizuallashtirish laboratoriyasi</p>
+  </div>
+  <div class="badge">Offline • O‘zbekcha • Interaktiv</div>
+</header>
+
+<nav id="tabs">
+  <button class="tab active" data-tab="roots">Tenglama ildizi</button>
+  <button class="tab" data-tab="gauss">Gauss usuli</button>
+  <button class="tab" data-tab="interp">Interpolatsiya</button>
+  <button class="tab" data-tab="integral">Taqribiy integral</button>
+  <button class="tab" data-tab="ode">Eyler / RK4</button>
+  <button class="tab" data-tab="pde">Elliptik PDE</button>
+</nav>
+
+<main>
+<section id="roots" class="panel active">
+  <h2>1. Algebraik va transendent tenglamalar ildizi</h2>
+  <div class="grid2">
+    <div class="card">
+      <label>f(x)</label>
+      <input id="root-f" value="x*x*x - x - 2" />
+      <div class="row">
+        <div><label>a</label><input id="root-a" type="number" step="any" value="1" /></div>
+        <div><label>b</label><input id="root-b" type="number" step="any" value="2" /></div>
+      </div>
+      <div class="row">
+        <div><label>ε</label><input id="root-eps" type="number" step="any" value="0.0001" /></div>
+        <div><label>Max iter.</label><input id="root-max" type="number" value="50" /></div>
+      </div>
+      <div class="row buttons">
+        <button onclick="solveRoot('bisection')">Bisection</button>
+        <button onclick="solveRoot('newton')">Newton</button>
+        <button onclick="solveRoot('secant')">Secant</button>
+      </div>
+      <p class="hint">Ifodada <b>Math.sin(x)</b>, <b>Math.exp(x)</b>, <b>Math.log(x)</b> kabi yozuvlar ishlaydi.</p>
+    </div>
+    <div class="card">
+      <h3>Natija</h3>
+      <div id="root-summary" class="summary">Usulni tanlang.</div>
+      <canvas id="root-canvas" width="640" height="300"></canvas>
+    </div>
+  </div>
+  <div class="card"><h3>Iteratsiyalar</h3><div class="table-wrap"><table id="root-table"></table></div></div>
+</section>
+
+<section id="gauss" class="panel">
+  <h2>2. Chiziqli tenglamalar sistemasini Gauss usuli bilan yechish</h2>
+  <div class="grid2">
+    <div class="card">
+      <label>Kengaytirilgan matritsa [A|b] (qatorlar yangi qatorda, elementlar bo‘shliq bilan)</label>
+      <textarea id="gauss-mat" rows="8">2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3</textarea>
+      <button onclick="solveGauss()">Hisobla</button>
+    </div>
+    <div class="card">
+      <h3>Yechim</h3>
+      <div id="gauss-summary" class="summary">Matritsani kiriting.</div>
+    </div>
+  </div>
+  <div class="card"><h3>Elementar almashtirish bosqichlari</h3><div id="gauss-steps"></div></div>
+</section>
+
+<section id="interp" class="panel">
+  <h2>3. Interpolatsiya: Lagrange va Newton</h2>
+  <div class="grid2">
+    <div class="card">
+      <label>x nuqtalar</label><input id="ix" value="0,1,2,3" />
+      <label>y nuqtalar</label><input id="iy" value="1,2,5,10" />
+      <label>Hisoblanadigan x*</label><input id="itarget" type="number" step="any" value="1.5" />
+      <div class="buttons">
+        <button onclick="solveInterp('lagrange')">Lagrange</button>
+        <button onclick="solveInterp('newton')">Newton</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Natija</h3>
+      <div id="interp-summary" class="summary">Usulni tanlang.</div>
+      <canvas id="interp-canvas" width="640" height="300"></canvas>
+    </div>
+  </div>
+  <div class="card"><h3>Hisoblash tafsilotlari</h3><div id="interp-details"></div></div>
+</section>
+
+<section id="integral" class="panel">
+  <h2>4. Integrallarni taqribiy yechish</h2>
+  <div class="grid2">
+    <div class="card">
+      <label>f(x)</label><input id="int-f" value="Math.sin(x)" />
+      <div class="row">
+        <div><label>a</label><input id="int-a" type="number" step="any" value="0" /></div>
+        <div><label>b</label><input id="int-b" type="number" step="any" value="3.141592653589793" /></div>
+        <div><label>n</label><input id="int-n" type="number" value="10" /></div>
+      </div>
+      <div class="buttons">
+        <button onclick="solveIntegral('rect')">To‘g‘ri to‘rtburchak</button>
+        <button onclick="solveIntegral('trap')">Trapetsiya</button>
+        <button onclick="solveIntegral('simpson')">Simpson</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Natija</h3><div id="int-summary" class="summary">Usulni tanlang.</div>
+      <canvas id="int-canvas" width="640" height="300"></canvas>
+    </div>
+  </div>
+  <div class="card"><h3>n oshganda yaqinlashish</h3><div id="int-conv"></div></div>
+</section>
+
+<section id="ode" class="panel">
+  <h2>5. Differensial tenglamalarni taqribiy yechish: Eyler va RK4</h2>
+  <div class="grid2">
+    <div class="card">
+      <label>y' = f(x,y)</label><input id="ode-f" value="x + y" />
+      <div class="row">
+        <div><label>x0</label><input id="ode-x0" type="number" step="any" value="0" /></div>
+        <div><label>y0</label><input id="ode-y0" type="number" step="any" value="1" /></div>
+        <div><label>x oxiri</label><input id="ode-x1" type="number" step="any" value="1" /></div>
+        <div><label>h</label><input id="ode-h" type="number" step="any" value="0.1" /></div>
+      </div>
+      <div class="buttons">
+        <button onclick="solveODE('euler')">Eyler</button>
+        <button onclick="solveODE('rk4')">RK4</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Natija</h3><div id="ode-summary" class="summary">Usulni tanlang.</div>
+      <canvas id="ode-canvas" width="640" height="300"></canvas>
+    </div>
+  </div>
+  <div class="card"><h3>Qadamlar</h3><div class="table-wrap"><table id="ode-table"></table></div></div>
+</section>
+
+<section id="pde" class="panel">
+  <h2>6. Elliptik tipdagi PDE: Laplace tenglamasi uchun to‘r metodi</h2>
+  <div class="grid2">
+    <div class="card">
+      <p><b>Masala:</b> ∂²u/∂x² + ∂²u/∂y² = 0, kvadrat sohada.</p>
+      <label>To‘r o‘lchami N×N</label><input id="pde-n" type="number" value="10" min="4" max="40" />
+      <div class="row">
+        <div><label>Yuqori chegara</label><input id="pde-top" type="number" step="any" value="100" /></div>
+        <div><label>Qolgan chegaralar</label><input id="pde-other" type="number" step="any" value="0" /></div>
+      </div>
+      <label>ε</label><input id="pde-eps" type="number" step="any" value="0.0001" />
+      <button onclick="solvePDE()">Jacobi iteratsiyasi bilan yech</button>
+    </div>
+    <div class="card">
+      <h3>Natija</h3><div id="pde-summary" class="summary">Parametrlarni kiriting.</div>
+      <canvas id="pde-canvas" width="640" height="360"></canvas>
+    </div>
+  </div>
+  <div class="card"><h3>Markaziy kesim</h3><div id="pde-slice"></div></div>
+</section>
+</main>
+
+<footer>
+  <b>NumLab UZ</b> — sonli usullarni “javob” emas, “jarayon + xatolik + vizualizatsiya” bilan o‘rganish uchun.
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
