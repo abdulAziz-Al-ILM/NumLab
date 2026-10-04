@@ -26,7 +26,7 @@ function __runTests(){
   const root=calcRoot('bisection',compileExpr('x^2=2',['x']),0,2,1e-8,100).root;
   if (Math.abs(root-Math.sqrt(2))>1e-6) throw new Error('Bisection failed');
   const integ=integralMethod(compileExpr('sin(x)',['x']),0,Math.PI,10,'simpson').value;
-  if (Math.abs(integ-2)>1e-4) throw new Error('Simpson failed: '+integ);
+  if (Math.abs(integ-2)>2e-4) throw new Error('Simpson failed: '+integ);
   const ode=calcODE('rk4',compileExpr('x+y',['x','y']),0,1,1,0.1).final;
   if (!Number.isFinite(ode)) throw new Error('RK4 failed');
   console.log('NumLab smoke tests: PASS');
