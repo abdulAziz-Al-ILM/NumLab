@@ -62,13 +62,91 @@ function stepAll(key){const st=stepState[key];if(st){st.index=st.steps.length-1;
 function drawAxes(ctx,w,h,xmin,xmax,ymin,ymax){ctx.clearRect(0,0,w,h);ctx.strokeStyle='#d7dee9';ctx.lineWidth=1;const X=x=>45+(x-xmin)/(xmax-xmin)*(w-65),Y=y=>h-32-(y-ymin)/(ymax-ymin)*(h-52);if(ymin<=0&&ymax>=0){ctx.beginPath();ctx.moveTo(45,Y(0));ctx.lineTo(w-20,Y(0));ctx.stroke()}if(xmin<=0&&xmax>=0){ctx.beginPath();ctx.moveTo(X(0),18);ctx.lineTo(X(0),h-32);ctx.stroke()}return{X,Y}}
 function plotFunction(canvas,f,xmin,xmax,points=[]){const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;let vals=[];for(let i=0;i<=400;i++){let x=xmin+(xmax-xmin)*i/400;try{let y=f(x);if(Number.isFinite(y)&&Math.abs(y)<1e8)vals.push(y)}catch{}}if(!vals.length)return;let ymin=Math.min(...vals),ymax=Math.max(...vals);if(ymin===ymax){ymin--;ymax++}const p=(ymax-ymin)*.15;ymin-=p;ymax+=p;const A=drawAxes(ctx,w,h,xmin,xmax,ymin,ymax);ctx.strokeStyle='#2563eb';ctx.lineWidth=2;ctx.beginPath();let started=false;for(let i=0;i<=700;i++){let x=xmin+(xmax-xmin)*i/700,y;try{y=f(x)}catch{continue}if(!Number.isFinite(y)||Math.abs(y)>1e8){started=false;continue}const px=A.X(x),py=A.Y(y);if(!started){ctx.moveTo(px,py);started=true}else ctx.lineTo(px,py)}ctx.stroke();ctx.fillStyle='#dc2626';for(const pnt of points){ctx.beginPath();ctx.arc(A.X(pnt.x),A.Y(pnt.y),4,0,Math.PI*2);ctx.fill()}}
 
+const rootVisualState={method:null,f:null,rows:[],index:0,xmin:0,xmax:1,timer:null};
+function rootVisualSetup(method,f,rows,xmin,xmax){
+  if(rootVisualState.timer){clearInterval(rootVisualState.timer);rootVisualState.timer=null}
+  rootVisualState.method=method;rootVisualState.f=f;rootVisualState.rows=rows;rootVisualState.index=0;
+  rootVisualState.xmin=xmin;rootVisualState.xmax=xmax;
+  drawRootVisual();
+}
+function rootVisualPrev(){if(!rootVisualState.rows.length)return;rootVisualState.index=Math.max(0,rootVisualState.index-1);drawRootVisual()}
+function rootVisualNext(){if(!rootVisualState.rows.length)return;rootVisualState.index=Math.min(rootVisualState.rows.length-1,rootVisualState.index+1);drawRootVisual()}
+function playRootVisual(){
+  if(!rootVisualState.rows.length)return;
+  if(rootVisualState.timer){clearInterval(rootVisualState.timer);rootVisualState.timer=null;return}
+  rootVisualState.index=0;drawRootVisual();
+  rootVisualState.timer=setInterval(()=>{
+    if(rootVisualState.index>=rootVisualState.rows.length-1){clearInterval(rootVisualState.timer);rootVisualState.timer=null;return}
+    rootVisualState.index++;drawRootVisual();
+  },900);
+}
+function drawRootVisual(){
+  const S=rootVisualState;if(!S.rows.length||!S.f)return;
+  const d=S.rows[S.index],canvas=document.getElementById('root-canvas'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+  let xmin=S.xmin,xmax=S.xmax;if(!(xmax>xmin)){xmin-=1;xmax+=1}
+  const extra=(xmax-xmin)*.12;xmin-=extra;xmax+=extra;
+  let xs=[],ys=[];
+  for(let i=0;i<=500;i++){const x=xmin+(xmax-xmin)*i/500;try{const y=S.f(x);if(Number.isFinite(y)&&Math.abs(y)<1e6){xs.push(x);ys.push(y)}}catch{}}
+  const special=[];
+  if(S.method==='bisection') special.push([d.a,S.f(d.a)],[d.b,S.f(d.b)],[d.x,d.fx],[d.x,0]);
+  if(S.method==='newton') special.push([d.x,d.fx],[d.nx,0]);
+  if(S.method==='vatar') special.push([d.a,d.fa],[d.b,d.fb],[d.x,0],[d.x,d.fx]);
+  if(S.method==='secant') special.push([d.x0,d.f0],[d.x1,d.f1],[d.x2,0]);
+  for(const p of special){if(Number.isFinite(p[1])&&Math.abs(p[1])<1e6)ys.push(p[1])}
+  if(!ys.length)return;
+  let ymin=Math.min(...ys,0),ymax=Math.max(...ys,0);if(ymin===ymax){ymin--;ymax++}
+  const py=(ymax-ymin)*.18;ymin-=py;ymax+=py;
+  const A=drawAxes(ctx,w,h,xmin,xmax,ymin,ymax);
+
+  ctx.strokeStyle='#2563eb';ctx.lineWidth=2.2;ctx.beginPath();let started=false;
+  for(let i=0;i<=700;i++){const x=xmin+(xmax-xmin)*i/700;let y;try{y=S.f(x)}catch{continue}
+    if(!Number.isFinite(y)||Math.abs(y)>1e6){started=false;continue}
+    const px=A.X(x),qy=A.Y(y);if(!started){ctx.moveTo(px,qy);started=true}else ctx.lineTo(px,qy)
+  }ctx.stroke();
+
+  const line=(x1,y1,x2,y2,stroke='#f59e0b',dash=[])=>{
+    ctx.save();ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(A.X(x1),A.Y(y1));ctx.lineTo(A.X(x2),A.Y(y2));ctx.stroke();ctx.restore();
+  };
+  const point=(x,y,label,fill='#dc2626')=>{
+    ctx.fillStyle=fill;ctx.beginPath();ctx.arc(A.X(x),A.Y(y),5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#111827';ctx.font='12px system-ui';ctx.fillText(label,A.X(x)+7,A.Y(y)-7);
+  };
+  const vertical=(x,stroke='#94a3b8')=>line(x,0,x,S.f(x),stroke,[5,5]);
+
+  let note='';
+  if(S.method==='bisection'){
+    vertical(d.a);vertical(d.b);vertical(d.x,'#f59e0b');
+    point(d.a,S.f(d.a),'a');point(d.b,S.f(d.b),'b');point(d.x,d.fx,'c');
+    point(d.x,0,'c on Ox','#16a34a');
+    note=`Iteratsiya ${d.k}: [a,b]=[${fmt(d.a)}, ${fmt(d.b)}]. O‘rta nuqta c=${fmt(d.x)}. Endi f(c) ishorasiga qarab kesmaning faqat kerakli yarmi qoladi.`;
+  } else if(S.method==='newton'){
+    const span=(xmax-xmin)*.35;
+    const yL=d.fx+d.d*((d.x-span)-d.x),yR=d.fx+d.d*((d.x+span)-d.x);
+    line(d.x-span,yL,d.x+span,yR,'#f59e0b');
+    vertical(d.x);point(d.x,d.fx,'(xₖ,f(xₖ))');point(d.nx,0,'xₖ₊₁','#16a34a');
+    note=`Iteratsiya ${d.k}: egri chiziqqa xₖ=${fmt(d.x)} nuqtada urinma chizildi. Urinmaning Ox bilan kesishishi xₖ₊₁=${fmt(d.nx)}.`;
+  } else if(S.method==='vatar'){
+    line(d.a,d.fa,d.b,d.fb,'#f59e0b');
+    vertical(d.a);vertical(d.b);
+    point(d.a,d.fa,'A');point(d.b,d.fb,'B');point(d.x,0,'x','#16a34a');
+    note=`Iteratsiya ${d.k}: A(a,f(a)) va B(b,f(b)) vatar bilan tutashtirildi. Vatar Ox ni x=${fmt(d.x)} nuqtada kesdi; endi ishoraga qarab kesmaning bir uchi yangilanadi.`;
+  } else {
+    line(d.x0,d.f0,d.x1,d.f1,'#f59e0b');
+    point(d.x0,d.f0,'x₀');point(d.x1,d.f1,'x₁');point(d.x2,0,'x₂','#16a34a');
+    note=`Iteratsiya ${d.k}: oxirgi ikki nuqta orqali secant chizildi. Uning Ox bilan kesishishi yangi yaqinlashish x₂=${fmt(d.x2)}; keyingi qadamda eski juftlik oldinga suriladi.`;
+  }
+  ctx.fillStyle='#475569';ctx.font='12px system-ui';ctx.fillText(`${S.index+1}/${S.rows.length}`,w-55,22);
+  document.getElementById('root-visual-note').innerHTML='<b>Grafikdagi ma’no:</b> '+esc(note);
+}
+
+
 function findBracket(f,a,b){let lo=Math.min(a,b),hi=Math.max(a,b);let fa=f(lo),fb=f(hi);if(Number.isFinite(fa)&&Number.isFinite(fb)&&fa*fb<=0)return[lo,hi];let center=(lo+hi)/2,span=Math.max(1,hi-lo);for(let level=0;level<8;level++){let L=center-span,R=center+span,prevX=L,prevY;try{prevY=f(L)}catch{prevY=NaN}for(let i=1;i<=400;i++){let x=L+(R-L)*i/400,y;try{y=f(x)}catch{y=NaN}if(Number.isFinite(prevY)&&Number.isFinite(y)&&prevY*y<=0)return[prevX,x];prevX=x;prevY=y}span*=2}return null}
 function calcRoot(method,f,a,b,eps,max){const rows=[];if(method==='bisection'){const br=findBracket(f,a,b);if(!br)throw new Error('Belgilangan va kengaytirilgan oraliqda ishora almashishi topilmadi. Teng ikkiga bo‘lish usuli real ildizni qamragan interval talab qiladi.');[a,b]=br;let fa=f(a);for(let k=1;k<=max;k++){const x=(a+b)/2,fx=f(x),err=Math.abs(b-a)/2;rows.push({k,a,b,x,fx,err});if(Math.abs(fx)<eps||err<eps)return{root:x,rows,bracket:br};if(fa*fx<=0)b=x;else{a=x;fa=fx}}return{root:rows.at(-1).x,rows,bracket:br}}
 if(method==='newton'){let x=(a+b)/2;for(let k=1;k<=max;k++){const h=1e-6*(1+Math.abs(x)),fx=f(x),d=(f(x+h)-f(x-h))/(2*h);if(!Number.isFinite(d)||Math.abs(d)<1e-14)throw new Error('Newton uchun hosila 0 ga juda yaqinlashdi. Boshlang‘ich oraliqni o‘zgartiring.');const nx=x-fx/d,err=Math.abs(nx-x);rows.push({k,x,fx,d,nx,err});x=nx;if(!Number.isFinite(x))throw new Error('Newton iteratsiyasi sonli sohadan chiqib ketdi.');if(err<eps||Math.abs(f(x))<eps)return{root:x,rows}}return{root:x,rows}}
 if(method==='vatar'){const br=findBracket(f,a,b);if(!br)throw new Error('Vatarlar usuli uchun ildizni qamragan [a,b] interval topilmadi.');[a,b]=br;let fa=f(a),fb=f(b);for(let k=1;k<=max;k++){const den=fb-fa;if(!Number.isFinite(den)||Math.abs(den)<1e-14)throw new Error('Vatar formulasi maxraji 0 ga yaqinlashdi.');const x=(a*fb-b*fa)/den,fx=f(x),err=Math.min(Math.abs(x-a),Math.abs(b-x));rows.push({k,a,b,fa,fb,x,fx,err});if(Math.abs(fx)<eps||Math.abs(b-a)<eps)return{root:x,rows,bracket:br};if(fa*fx<=0){b=x;fb=fx}else{a=x;fa=fx}}return{root:rows.at(-1).x,rows,bracket:br}}
 let x0=a,x1=b;for(let k=1;k<=max;k++){const f0=f(x0),f1=f(x1),den=f1-f0;if(!Number.isFinite(den)||Math.abs(den)<1e-14)throw new Error('Secant maxraji 0 ga yaqinlashdi.');const x2=x1-f1*(x1-x0)/den,err=Math.abs(x2-x1);rows.push({k,x0,x1,f0,f1,x2,err});x0=x1;x1=x2;if(!Number.isFinite(x1))throw new Error('Secant iteratsiyasi sonli sohadan chiqib ketdi.');if(err<eps||Math.abs(f(x1))<eps)return{root:x1,rows}}return{root:x1,rows}}
 function rootInputs(){const raw=document.getElementById('root-f').value,f=compileExpr(raw,['x']),a=parseScalar(document.getElementById('root-a').value),b=parseScalar(document.getElementById('root-b').value),eps=parseScalar(document.getElementById('root-eps').value),max=+document.getElementById('root-max').value;if(!(eps>0)||max<1)throw new Error('ε > 0 va Max iter. ≥ 1 bo‘lishi kerak.');return{raw,f,a,b,eps,max}}
-function solveRoot(method){try{const I=rootInputs(),r=calcRoot(method,I.f,I.a,I.b,I.eps,I.max),fx=I.f(r.root);document.getElementById('root-summary').innerHTML=`<b>${method==='bisection'?'Teng ikkiga bo‘lish':method==='newton'?'Newton':method==='vatar'?'Vatarlar':'Secant'}</b><br>x ≈ <b>${fmt(r.root)}</b><br>F(x) ≈ ${fmt(fx)}<br>Iteratsiya: ${r.rows.length}`;const steps=[{title:'Masalani standart ko‘rinishga keltirish',body:`<div class="math">Kiritildi: ${esc(I.raw)}\nNumLab ichki ko‘rinishi: F(x)=0</div>`}];steps.push({title:'Qog‘ozda avval nima qilamiz?',body:method==='bisection'?'<div class="paper-note">1) Tenglamani F(x)=0 ko‘rinishga keltiramiz. 2) f(a) va f(b) ni hisoblaymiz. 3) Ishora almashishini tekshiramiz. 4) Jadvalga a, b, c, f(c), xatolik ustunlarini chizamiz.</div>':method==='newton'?'<div class="paper-note">1) x₀ ni tanlaymiz. 2) f(x₀) va f′(x₀) ni topamiz. 3) Newton formulasiga qo‘yamiz. 4) Har qatorda xₖ, f(xₖ), f′(xₖ), xₖ₊₁ ni yozamiz.</div>':method==='vatar'?'<div class="paper-note">1) f(a)·f(b)&lt;0 bo‘lgan kesmani olamiz. 2) A(a,f(a)) va B(b,f(b)) nuqtalarni vatar bilan tutashtiramiz. 3) Vatarning Ox bilan kesishgan x nuqtasini formula orqali topamiz. 4) Ishoraga qarab a yoki b ni x bilan almashtiramiz.</div>':'<div class="paper-note">1) Ikki boshlang‘ich x₀ va x₁ olinadi. 2) f(x₀), f(x₁) hisoblanadi. 3) Secant formulasidan x₂ topiladi. 4) Keyingi qatorda x₀←x₁, x₁←x₂ qilinadi.</div>'});if((method==='bisection'||method==='vatar')&&r.bracket)steps.push({title:'Ildizni qamragan interval',body:`<div class="math">a=${fmt(r.bracket[0])}, b=${fmt(r.bracket[1])}\nF(a)=${fmt(I.f(r.bracket[0]))}, F(b)=${fmt(I.f(r.bracket[1]))}</div>Belgilar qarama-qarshi, demak uzluksiz holatda oraliqda kamida bitta ildiz bor.`});for(const d of r.rows){if(method==='bisection')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">c=(a+b)/2 = (${fmt(d.a)}+${fmt(d.b)})/2 = ${fmt(d.x)}\nF(c)=${fmt(d.fx)}\nxatolik chegarasi ≤ |b-a|/2 = ${fmt(d.err)}</div><div class="paper-note"><b>Qog‘ozda:</b> c ni toping, f(c) ishorasini f(a) yoki f(b) bilan solishtiring va keyingi kesmani yozing.</div>`});else if(method==='newton')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">xₖ=${fmt(d.x)}\nF(xₖ)=${fmt(d.fx)}\nF′(xₖ)≈${fmt(d.d)}\nxₖ₊₁=xₖ−F/F′=${fmt(d.nx)}\n|Δx|=${fmt(d.err)}</div>`});else if(method==='vatar')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">a=${fmt(d.a)}, b=${fmt(d.b)}\nF(a)=${fmt(d.fa)}, F(b)=${fmt(d.fb)}\nx = [a·F(b) - b·F(a)]/[F(b)-F(a)] = ${fmt(d.x)}\nF(x)=${fmt(d.fx)}</div><div class="paper-note"><b>Qog‘ozda:</b> A(a,F(a)) va B(b,F(b)) orqali o‘tgan vatar tenglamasining y=0 dagi kesishishini topyapmiz. Keyin F(a)·F(x) ishorasiga qarab kesmaning bir uchini x bilan almashtiramiz.</div>`});else steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">x₀=${fmt(d.x0)}, x₁=${fmt(d.x1)}\nF(x₀)=${fmt(d.f0)}, F(x₁)=${fmt(d.f1)}\nx₂=x₁−F(x₁)(x₁−x₀)/(F(x₁)−F(x₀))=${fmt(d.x2)}\n|Δx|=${fmt(d.err)}</div>`})}steps.push({title:'Tekshiruv va xulosa',body:`<div class="math">x≈${fmt(r.root)}\nF(x)≈${fmt(fx)}</div>${Math.abs(fx)<=Math.max(I.eps*10,1e-8)?'<span class="ok">Qoldiq kichik — natija qabul qilinadi.</span>':'<span class="warn">Qoldiq ε dan katta; ko‘proq iteratsiya yoki boshqa boshlang‘ich qiymat kerak bo‘lishi mumkin.</span>'}`});setSteps('root',steps);const br=r.bracket||[Math.min(I.a,I.b),Math.max(I.a,I.b)];plotFunction(document.getElementById('root-canvas'),I.f,br[0],br[1],[{x:r.root,y:0}])}catch(e){document.getElementById('root-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
+function solveRoot(method){try{const I=rootInputs(),r=calcRoot(method,I.f,I.a,I.b,I.eps,I.max),fx=I.f(r.root);document.getElementById('root-summary').innerHTML=`<b>${method==='bisection'?'Teng ikkiga bo‘lish':method==='newton'?'Newton':method==='vatar'?'Vatarlar':'Secant'}</b><br>x ≈ <b>${fmt(r.root)}</b><br>F(x) ≈ ${fmt(fx)}<br>Iteratsiya: ${r.rows.length}`;const steps=[{title:'Masalani standart ko‘rinishga keltirish',body:`<div class="math">Kiritildi: ${esc(I.raw)}\nNumLab ichki ko‘rinishi: F(x)=0</div>`}];steps.push({title:'Qog‘ozda avval nima qilamiz?',body:method==='bisection'?'<div class="paper-note">1) Tenglamani F(x)=0 ko‘rinishga keltiramiz. 2) f(a) va f(b) ni hisoblaymiz. 3) Ishora almashishini tekshiramiz. 4) Jadvalga a, b, c, f(c), xatolik ustunlarini chizamiz.</div>':method==='newton'?'<div class="paper-note">1) x₀ ni tanlaymiz. 2) f(x₀) va f′(x₀) ni topamiz. 3) Newton formulasiga qo‘yamiz. 4) Har qatorda xₖ, f(xₖ), f′(xₖ), xₖ₊₁ ni yozamiz.</div>':method==='vatar'?'<div class="paper-note">1) f(a)·f(b)&lt;0 bo‘lgan kesmani olamiz. 2) A(a,f(a)) va B(b,f(b)) nuqtalarni vatar bilan tutashtiramiz. 3) Vatarning Ox bilan kesishgan x nuqtasini formula orqali topamiz. 4) Ishoraga qarab a yoki b ni x bilan almashtiramiz.</div>':'<div class="paper-note">1) Ikki boshlang‘ich x₀ va x₁ olinadi. 2) f(x₀), f(x₁) hisoblanadi. 3) Secant formulasidan x₂ topiladi. 4) Keyingi qatorda x₀←x₁, x₁←x₂ qilinadi.</div>'});if((method==='bisection'||method==='vatar')&&r.bracket)steps.push({title:'Ildizni qamragan interval',body:`<div class="math">a=${fmt(r.bracket[0])}, b=${fmt(r.bracket[1])}\nF(a)=${fmt(I.f(r.bracket[0]))}, F(b)=${fmt(I.f(r.bracket[1]))}</div>Belgilar qarama-qarshi, demak uzluksiz holatda oraliqda kamida bitta ildiz bor.`});for(const d of r.rows){if(method==='bisection')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">c=(a+b)/2 = (${fmt(d.a)}+${fmt(d.b)})/2 = ${fmt(d.x)}\nF(c)=${fmt(d.fx)}\nxatolik chegarasi ≤ |b-a|/2 = ${fmt(d.err)}</div><div class="paper-note"><b>Qog‘ozda:</b> c ni toping, f(c) ishorasini f(a) yoki f(b) bilan solishtiring va keyingi kesmani yozing.</div>`});else if(method==='newton')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">xₖ=${fmt(d.x)}\nF(xₖ)=${fmt(d.fx)}\nF′(xₖ)≈${fmt(d.d)}\nxₖ₊₁=xₖ−F/F′=${fmt(d.nx)}\n|Δx|=${fmt(d.err)}</div><div class="paper-note"><b>Qog‘ozda:</b> avval f(xₖ) va f′(xₖ) ni alohida hisoblang. So‘ng formulaga sonlarni qo‘yib xₖ₊₁ ni yozing. Geometrik ma’nosi — urinmaning Ox bilan kesishishi.</div>`});else if(method==='vatar')steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">a=${fmt(d.a)}, b=${fmt(d.b)}\nF(a)=${fmt(d.fa)}, F(b)=${fmt(d.fb)}\nx = [a·F(b) - b·F(a)]/[F(b)-F(a)] = ${fmt(d.x)}\nF(x)=${fmt(d.fx)}</div><div class="paper-note"><b>Qog‘ozda:</b> A(a,F(a)) va B(b,F(b)) orqali o‘tgan vatar tenglamasining y=0 dagi kesishishini topyapmiz. Keyin F(a)·F(x) ishorasiga qarab kesmaning bir uchini x bilan almashtiramiz.</div>`});else steps.push({title:`${d.k}-iteratsiya`,body:`<div class="math">x₀=${fmt(d.x0)}, x₁=${fmt(d.x1)}\nF(x₀)=${fmt(d.f0)}, F(x₁)=${fmt(d.f1)}\nx₂=x₁−F(x₁)(x₁−x₀)/(F(x₁)−F(x₀))=${fmt(d.x2)}\n|Δx|=${fmt(d.err)}</div><div class="paper-note"><b>Qog‘ozda:</b> ikki eski nuqtani jadvalga yozing, f qiymatlarini hisoblang, secant formulasidan yangi x₂ ni toping. Keyingi qatorda (x₀,x₁) o‘rniga (x₁,x₂) yoziladi.</div>`})}steps.push({title:'Tekshiruv va xulosa',body:`<div class="math">x≈${fmt(r.root)}\nF(x)≈${fmt(fx)}</div>${Math.abs(fx)<=Math.max(I.eps*10,1e-8)?'<span class="ok">Qoldiq kichik — natija qabul qilinadi.</span>':'<span class="warn">Qoldiq ε dan katta; ko‘proq iteratsiya yoki boshqa boshlang‘ich qiymat kerak bo‘lishi mumkin.</span>'}`});setSteps('root',steps);const br=r.bracket||[Math.min(I.a,I.b),Math.max(I.a,I.b)];rootVisualSetup(method,I.f,r.rows,br[0],br[1])}catch(e){document.getElementById('root-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 function compareRoots(){try{const I=rootInputs(),rows=[];for(const m of ['bisection','newton','vatar','secant']){try{const r=calcRoot(m,I.f,I.a,I.b,I.eps,I.max);rows.push([m,fmt(r.root),r.rows.length,fmt(Math.abs(I.f(r.root)))])}catch(e){rows.push([m,'—','—',esc(e.message)])}}const box=document.getElementById('root-compare');box.classList.remove('hidden');box.innerHTML='<h3>To‘rt usulni bir xil masalada taqqoslash</h3>'+table(['Usul','Ildiz','Iteratsiya','|F(x)|'],rows)}catch(e){alert(e.message)}}
 
 function switchGaussMode(){const eq=document.getElementById('gauss-mode').value==='equations';document.getElementById('gauss-matrix-wrap').classList.toggle('hidden',eq);document.getElementById('gauss-equations-wrap').classList.toggle('hidden',!eq)}
