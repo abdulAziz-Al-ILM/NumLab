@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: 24
       - name: Syntax check
-        run: node --check app.js
+        run: |
+          node --check app.js
+          node --check subjects/modeling/modeling.js
       - name: Numerical smoke tests
         run: node tests/smoke.js
