@@ -2,7 +2,7 @@
 
 **NumLab UZ** — sonli usullarni hisoblash, tushuntirish va vizuallashtirish uchun o‘zbek tilidagi interaktiv laboratoriya.
 
-> Maqsad: faqat yakuniy javobni berish emas, balki **algoritm jarayoni, iteratsiya, xatolik va yaqinlashishni ko‘rsatish**.
+> Maqsad: foydalanuvchi o‘z misolini oddiy matematik yozuvda kiritadi; NumLab uni **algoritm jarayoni, iteratsiya, xatolik va tekshiruv bilan qadam-baqadam** yechadi.
 
 ## Live demo
 
@@ -19,6 +19,19 @@ GitHub Pages ishga tushirilgach:
 - **Chebishev tugunlari demo**si.
 - **PDF / Print** uchun akademik ko‘rinish.
 - Domlaga topshirish bo‘yicha [himoya qo‘llanmasi](docs/SUBMISSION_GUIDE.md).
+
+## Universal input
+
+NumLab endi tayyor demo misollar bilan cheklanmaydi. Masalan:
+
+- `x^2=2`, `sin x=0.7`, `e^x=3x`
+- `2x+y-z=8` ko‘rinishidagi chiziqli sistemalar
+- istalgan interpolatsiya tugunlari
+- `e^(-x^2)`, `1/(1+x^2)` kabi integral funksiyalari
+- `y'=x^2-y` kabi birinchi tartibli ODE lar
+- Laplace masalasi uchun funksional Dirichlet chegaralari
+
+`^, ², ³, √, sin, cos, ln, e, pi` kabi odatiy matematik yozuvlar qabul qilinadi.
 
 ## Hozirgi modullar
 
