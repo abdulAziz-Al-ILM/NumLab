@@ -108,7 +108,7 @@
 </section>
 <section id="integral" class="panel">
   <div class="section-head"><div><span class="kicker">LAB 04</span><h2>Aniq integralni taqribiy hisoblash</h2></div><div class="formula">∫ₐᵇ f(x)dx</div></div>
-  <div class="theory">Istalgan haqiqiy qiymatli f(x) funksiyasi. Simpson usulida n toq bo‘lsa, dastur nima uchun n ni juftga o‘zgartirganini qadamda tushuntiradi.</div>
+  <div class="theory"><b>Nega kerak?</b> Integral yuza, yo‘l, ish, energiya, ehtimollik va yig‘indi effektni beradi. Antiderivativ topish qiyin bo‘lsa sonli integrallash ishlatiladi. <b>Qog‘ozda:</b> [a,b] bo‘linadi → f(x) qiymatlari olinadi → tanlangan formula bo‘yicha yuzalar yig‘iladi. <b>Afzallik:</b> murakkab funksiyada ham ishlaydi. <b>Kamchilik:</b> aniqlik n, h va funksiyaning silliqligiga bog‘liq.</div>
   <div class="grid2">
     <div class="card"><label>f(x)</label><input id="int-f" value="sin(x)"><div class="examples"><button onclick="setVal('int-f','e^(-x^2)')">e^(-x²)</button><button onclick="setVal('int-f','1/(1+x^2)')">1/(1+x²)</button><button onclick="setVal('int-f','sqrt(1+x^2)')">√(1+x²)</button></div><div class="row"><div><label>a</label><input id="int-a" value="0"></div><div><label>b</label><input id="int-b" value="pi"></div><div><label>n</label><input id="int-n" type="number" value="10" min="1"></div></div><div class="buttons"><button onclick="solveIntegral('rect')">O‘rta to‘rtburchak</button><button onclick="solveIntegral('trap')">Trapetsiya</button><button onclick="solveIntegral('simpson')">Simpson</button><button class="secondary" onclick="compareIntegrals()">Taqqosla</button></div></div>
     <div class="card result-card"><h3>Natija va geometrik ma’no</h3><div id="int-summary" class="summary">Funksiyani kiriting.</div><canvas id="int-canvas" width="720" height="350"></canvas><div id="int-visual-note" class="visual-note">Metodni ishga tushiring — integralning geometrik yaqinlashuvi ko‘rinadi.</div></div>
@@ -118,7 +118,7 @@
 </section>
 <section id="ode" class="panel">
   <div class="section-head"><div><span class="kicker">LAB 05</span><h2>Boshlang‘ich shartli ODE</h2></div><div class="formula">y′=f(x,y), y(x₀)=y₀</div></div>
-  <div class="theory">Istalgan birinchi tartibli ODE o‘ng tomoni f(x,y). Masalan <code>x+y</code>, <code>x^2-y</code>, <code>sin(x)-y</code>.</div>
+  <div class="theory"><b>Nega kerak?</b> Vaqt yoki masofa bo‘yicha o‘zgaradigan jarayonlar ko‘pincha ODE bilan yoziladi: sovish, harakat, aholi o‘sishi, kimyoviy reaksiya. <b>Qog‘ozda:</b> Eyler hozirgi qiyalikdan bitta qadam yuradi; RK4 bitta qadam ichida to‘rtta qiyalikni tekshiradi. <b>Afzallik:</b> analitik yechim bo‘lmasa ham trayektoriya quradi. <b>Kamchilik:</b> qadam katta bo‘lsa xatolik ortadi.</div>
   <div class="grid2">
     <div class="card"><label>f(x,y)</label><input id="ode-f" value="x+y"><div class="row"><div><label>x₀</label><input id="ode-x0" value="0"></div><div><label>y₀</label><input id="ode-y0" value="1"></div><div><label>x oxiri</label><input id="ode-x1" value="1"></div><div><label>h</label><input id="ode-h" value="0.1"></div></div><div class="buttons"><button onclick="solveODE('euler')">Eyler</button><button onclick="solveODE('rk4')">RK4</button><button class="secondary" onclick="compareODE()">Taqqosla</button></div></div>
     <div class="card result-card"><h3>Natija</h3><div id="ode-summary" class="summary">ODE ni kiriting.</div><canvas id="ode-canvas" width="720" height="330"></canvas></div>
@@ -128,10 +128,16 @@
 </section>
 <section id="pde" class="panel">
   <div class="section-head"><div><span class="kicker">LAB 06</span><h2>Laplace tenglamasi — umumiy Dirichlet chegaralari</h2></div><div class="formula">uₓₓ+uᵧᵧ=0</div></div>
-  <div class="theory">Kvadrat soha [0,1]×[0,1]. Har to‘rtta chegara konstanta yoki funksiya bo‘lishi mumkin: yuqori/pastda x, chap/o‘ngda y ishlatiladi.</div>
+  <div class="theory"><b>Nega kerak?</b> Laplace tenglamasi muvozanat holatini ifodalaydi: plastinkadagi barqaror harorat, elektrostatik potensial, suyuqlik oqimi potensiali. <b>Qog‘ozda:</b> soha to‘rga bo‘linadi → chegara qiymatlari yoziladi → ichki nuqtalar to‘rtta qo‘shnining o‘rtachasi bilan yangilanadi → ε gacha takrorlanadi. <b>Afzallik:</b> murakkab chegarani oddiy arifmetik iteratsiyaga aylantiradi. <b>Kamchilik:</b> Jacobi katta to‘rda sekin.</div>
   <div class="grid2">
     <div class="card"><label>To‘r N×N</label><input id="pde-n" type="number" value="12" min="4" max="60"><div class="row"><div><label>Yuqori u(x,1)</label><input id="pde-top" value="100"></div><div><label>Past u(x,0)</label><input id="pde-bottom" value="0"></div></div><div class="row"><div><label>Chap u(0,y)</label><input id="pde-left" value="0"></div><div><label>O‘ng u(1,y)</label><input id="pde-right" value="0"></div></div><label>ε</label><input id="pde-eps" value="0.0001"><button onclick="solvePDE()">Jacobi bilan yech</button><p class="hint">Masalan yuqori: <code>100*sin(pi*x)</code>, o‘ng: <code>50*y</code>.</p></div>
-    <div class="card result-card"><h3>Natija</h3><div id="pde-summary" class="summary">Chegara shartlarini kiriting.</div><canvas id="pde-canvas" width="720" height="390"></canvas></div>
+    <div class="card result-card">
+  <h3>Natija va iteratsiya evolyutsiyasi</h3>
+  <div id="pde-summary" class="summary">Chegara shartlarini kiriting.</div>
+  <canvas id="pde-canvas" width="720" height="390"></canvas>
+  <div class="visual-controls"><button class="small secondary" onclick="pdeVisualPrev()">← Snapshot</button><button class="small" onclick="pdeVisualNext()">Keyingi snapshot →</button><button class="small secondary" onclick="playPDEVisual()">▶ Animatsiya</button></div>
+  <div id="pde-visual-note" class="visual-note">Jacobi usulini ishga tushiring — chegara qiymatlari ichkariga qanday tarqalishini ko‘rasiz.</div>
+</div>
   </div>
   <step-box data-key="pde"></step-box>
 </section>
