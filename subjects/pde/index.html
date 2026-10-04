@@ -24,6 +24,7 @@
   <button class="lab-tab" data-lab="heat">02 Issiqlik</button>
   <button class="lab-tab" data-lab="wave">03 To‘lqin</button>
   <button class="lab-tab" data-lab="laplace">04 Laplace</button>
+  <button class="lab-tab" data-lab="custompde">05 PDE sandbox</button>
 </nav>
 
 <section id="classify" class="lab-panel active">
@@ -127,6 +128,35 @@
       <div id="lap-summary" class="pde-summary"></div>
       <canvas id="lap-canvas" width="760" height="420"></canvas>
       <div id="lap-note" class="pde-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="custompde" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>ERKIN PROFIL</span><p>Issiqlik tenglamasi uchun boshlang‘ich u(x,0) ni formula bilan kiriting.</p></article>
+    <article><span>ERKIN CHEGARA</span><p>u(0,t) va u(1,t) qiymatlarini o‘zingiz belgilang.</p></article>
+    <article><span>FINITE DIFFERENCE</span><p>uᵢⁿ⁺¹ = uᵢⁿ + r(uᵢ₋₁ⁿ−2uᵢⁿ+uᵢ₊₁ⁿ).</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>1D issiqlik sandbox</h2>
+      <label>u(x,0) <input id="cp-init" value="100*sin(pi*x)"></label>
+      <label>α <input id="cp-alpha" type="number" step="0.01" value="0.1"></label>
+      <label>u(0,t) <input id="cp-left" value="0"></label>
+      <label>u(1,t) <input id="cp-right" value="0"></label>
+      <label>N <input id="cp-n" type="number" min="10" max="120" value="40"></label>
+      <label>T <input id="cp-t" type="number" step="0.01" value="0.5"></label>
+      <div class="examples"><button onclick="loadPDEExample('sine')">Sinus</button><button onclick="loadPDEExample('tent')">Uchburchak</button><button onclick="loadPDEExample('mixed')">Aralash</button></div>
+      <button onclick="runCustomPDE()">Simulyatsiya</button>
+      <div class="paper-box"><b>Barqarorlik:</b> explicit sxema uchun r=αΔt/Δx² ≤ 1/2 bo‘lishi kerak. NumLab Δt ni shu shartga mos tanlaydi.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Profil evolyutsiyasi</h2>
+      <div id="cp-summary" class="pde-summary"></div>
+      <canvas id="cp-canvas" width="760" height="360"></canvas>
+      <div class="buttons"><button onclick="cpPrev()">← Snapshot</button><button onclick="cpNext()">Keyingi →</button><button class="secondary-btn" onclick="playCP()">▶ Animatsiya</button></div>
+      <div id="cp-note" class="pde-note"></div>
     </div>
   </div>
 </section>
