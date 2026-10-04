@@ -21,5 +21,7 @@ jobs:
           node --check subjects/functional-analysis/fa.js
           node --check subjects/python/python.js
           node --check subjects/problem-solving/practice.js
+          node --check core/progress.js
+          node --check dashboard.js
       - name: Numerical smoke tests
         run: node tests/smoke.js
