@@ -325,7 +325,37 @@ function drawODEVisual(){
 function compareODE(){try{const I=odeInputs(),e=calcODE('euler',I.f,I.x0,I.y0,I.x1,I.h),r=calcODE('rk4',I.f,I.x0,I.y0,I.x1,I.h);const box=document.getElementById('ode-compare');box.classList.remove('hidden');box.innerHTML='<h3>Eyler va RK4</h3>'+table(['Usul','Qadam','y(x oxiri)'],[['Eyler',e.details.length,fmt(e.final)],['RK4',r.details.length,fmt(r.final)]])}catch(e){alert(e.message)}}
 
 // ---------- PDE ----------
-function solvePDE(){try{const N=Math.max(4,Math.min(60,Math.floor(+document.getElementById('pde-n').value))),eps=parseScalar(document.getElementById('pde-eps').value);if(!(eps>0))throw new Error('ε > 0 bo‘lishi kerak.');const top=compileExpr(document.getElementById('pde-top').value,['x']),bottom=compileExpr(document.getElementById('pde-bottom').value,['x']),left=compileExpr(document.getElementById('pde-left').value,['y']),right=compileExpr(document.getElementById('pde-right').value,['y']);let u=Array.from({length:N},()=>Array(N).fill(0));for(let j=0;j<N;j++){const x=j/(N-1);u[0][j]=top(x);u[N-1][j]=bottom(x)}for(let i=0;i<N;i++){const y=1-i/(N-1);u[i][0]=left(y);u[i][N-1]=right(y)}// corners average conflicting boundary definitions
-u[0][0]=(top(0)+left(1))/2;u[0][N-1]=(top(1)+right(1))/2;u[N-1][0]=(bottom(0)+left(0))/2;u[N-1][N-1]=(bottom(1)+right(0))/2;
-let iter=0,err=Infinity;const snapshots=[],milestones=new Set([1,2,5,10,25,50,100,250,500,1000,2500,5000,10000]);while(err>eps&&iter<30000){const v=u.map(r=>r.slice());err=0;for(let i=1;i<N-1;i++)for(let j=1;j<N-1;j++){v[i][j]=(u[i-1][j]+u[i+1][j]+u[i][j-1]+u[i][j+1])/4;err=Math.max(err,Math.abs(v[i][j]-u[i][j]))}u=v;iter++;if(milestones.has(iter)||err<=eps)snapshots.push({iter,err,center:u[Math.floor(N/2)][Math.floor(N/2)]})}const center=u[Math.floor(N/2)][Math.floor(N/2)];document.getElementById('pde-summary').innerHTML=`Iteratsiya: <b>${iter}</b><br>max |Δu|=${fmt(err)}<br>Markaz u≈<b>${fmt(center)}</b>`;const steps=[{title:'Chegara shartlarini to‘rga qo‘yish',body:`<div class="math">N=${N}\nε=${fmt(eps)}\nu(x,1)=${esc(document.getElementById('pde-top').value)}\nu(x,0)=${esc(document.getElementById('pde-bottom').value)}\nu(0,y)=${esc(document.getElementById('pde-left').value)}\nu(1,y)=${esc(document.getElementById('pde-right').value)}</div>`},{title:'Diskret Laplace formulasi',body:'<div class="math">uᵢⱼ(new)=[uᵢ₋₁ⱼ+uᵢ₊₁ⱼ+uᵢⱼ₋₁+uᵢⱼ₊₁]/4</div>'}];for(const s of snapshots)steps.push({title:`${s.iter}-iteratsiya`,body:`<div class="math">max |Δu|=${fmt(s.err)}\nmarkaz u=${fmt(s.center)}</div>${s.err<=eps?'<span class="ok">To‘xtash sharti bajarildi.</span>':'Yaqinlashish davom etmoqda.'}`});steps.push({title:'Xulosa',body:`Jacobi usuli ${iter} iteratsiyada berilgan ε aniqlikka ${err<=eps?'yetdi':'yetmadi'}.`});setSteps('pde',steps);drawHeatmap(u)}catch(e){document.getElementById('pde-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
+const pdeVisualState={snapshots:[],index:0,timer:null};
+function pdeVisualSetup(snapshots){if(pdeVisualState.timer){clearInterval(pdeVisualState.timer);pdeVisualState.timer=null}pdeVisualState.snapshots=snapshots;pdeVisualState.index=0;drawPDEVisual()}
+function pdeVisualPrev(){if(!pdeVisualState.snapshots.length)return;pdeVisualState.index=Math.max(0,pdeVisualState.index-1);drawPDEVisual()}
+function pdeVisualNext(){if(!pdeVisualState.snapshots.length)return;pdeVisualState.index=Math.min(pdeVisualState.snapshots.length-1,pdeVisualState.index+1);drawPDEVisual()}
+function playPDEVisual(){if(!pdeVisualState.snapshots.length)return;if(pdeVisualState.timer){clearInterval(pdeVisualState.timer);pdeVisualState.timer=null;return}pdeVisualState.index=0;drawPDEVisual();pdeVisualState.timer=setInterval(()=>{if(pdeVisualState.index>=pdeVisualState.snapshots.length-1){clearInterval(pdeVisualState.timer);pdeVisualState.timer=null;return}pdeVisualState.index++;drawPDEVisual()},750)}
+function drawPDEVisual(){const s=pdeVisualState.snapshots[pdeVisualState.index];if(!s)return;drawHeatmap(s.u);document.getElementById('pde-visual-note').innerHTML=`<b>${s.iter===0?'Boshlanish':s.iter+'-iteratsiya'}:</b> max |Δu|=${fmt(s.err)}; markaz u≈${fmt(s.center)}. <span class="muted">(${pdeVisualState.index+1}/${pdeVisualState.snapshots.length})</span>`}
+function solvePDE(){try{
+  const N=Math.max(4,Math.min(60,Math.floor(+document.getElementById('pde-n').value))),eps=parseScalar(document.getElementById('pde-eps').value);
+  if(!(eps>0))throw new Error('ε > 0 bo‘lishi kerak.');
+  const top=compileExpr(document.getElementById('pde-top').value,['x']),bottom=compileExpr(document.getElementById('pde-bottom').value,['x']),left=compileExpr(document.getElementById('pde-left').value,['y']),right=compileExpr(document.getElementById('pde-right').value,['y']);
+  let u=Array.from({length:N},()=>Array(N).fill(0));
+  for(let j=0;j<N;j++){const x=j/(N-1);u[0][j]=top(x);u[N-1][j]=bottom(x)}
+  for(let i=0;i<N;i++){const y=1-i/(N-1);u[i][0]=left(y);u[i][N-1]=right(y)}
+  u[0][0]=(top(0)+left(1))/2;u[0][N-1]=(top(1)+right(1))/2;u[N-1][0]=(bottom(0)+left(0))/2;u[N-1][N-1]=(bottom(1)+right(0))/2;
+  let iter=0,err=Infinity;
+  const snapshots=[{iter:0,err:Infinity,center:u[Math.floor(N/2)][Math.floor(N/2)],u:u.map(r=>r.slice())}];
+  const milestones=new Set([1,2,5,10,25,50,100,250,500,1000,2500,5000,10000]);
+  while(err>eps&&iter<30000){
+    const v=u.map(r=>r.slice());err=0;
+    for(let i=1;i<N-1;i++)for(let j=1;j<N-1;j++){v[i][j]=(u[i-1][j]+u[i+1][j]+u[i][j-1]+u[i][j+1])/4;err=Math.max(err,Math.abs(v[i][j]-u[i][j]))}
+    u=v;iter++;
+    if(milestones.has(iter)||err<=eps)snapshots.push({iter,err,center:u[Math.floor(N/2)][Math.floor(N/2)],u:u.map(r=>r.slice())});
+  }
+  const center=u[Math.floor(N/2)][Math.floor(N/2)];
+  document.getElementById('pde-summary').innerHTML=`Iteratsiya: <b>${iter}</b><br>max |Δu|=${fmt(err)}<br>Markaz u≈<b>${fmt(center)}</b>`;
+  const steps=[
+    {title:'Chegara shartlarini to‘rga qo‘yish',body:`<div class="math">N=${N}\nε=${fmt(eps)}\nu(x,1)=${esc(document.getElementById('pde-top').value)}\nu(x,0)=${esc(document.getElementById('pde-bottom').value)}\nu(0,y)=${esc(document.getElementById('pde-left').value)}\nu(1,y)=${esc(document.getElementById('pde-right').value)}</div><div class="paper-note"><b>Qog‘ozda:</b> avval to‘r chizing va faqat chegara tugunlariga berilgan qiymatlarni yozing. Ichki tugunlar hozircha noma’lum.</div>`},
+    {title:'Diskret Laplace formulasi',body:'<div class="math">uᵢⱼ(new)=[uᵢ₋₁ⱼ+uᵢ₊₁ⱼ+uᵢⱼ₋₁+uᵢⱼ₊₁]/4</div><div class="paper-note"><b>Qog‘ozda:</b> har bir ichki katak uchun yuqori, past, chap va o‘ng qo‘shnilar qiymatini qo‘shib 4 ga bo‘ling.</div>'}
+  ];
+  for(const q of snapshots.slice(1))steps.push({title:`${q.iter}-iteratsiya`,body:`<div class="math">max |Δu|=${fmt(q.err)}\nmarkaz u=${fmt(q.center)}</div>${q.err<=eps?'<span class="ok">To‘xtash sharti bajarildi.</span>':'Yaqinlashish davom etmoqda.'}`});
+  steps.push({title:'Xulosa',body:`Jacobi usuli ${iter} iteratsiyada berilgan ε aniqlikka ${err<=eps?'yetdi':'yetmadi'}. Heatmap chegaradagi qiymatlarning ichki sohaga qanday tarqalib, muvozanatga kelishini ko‘rsatadi.`});
+  setSteps('pde',steps);pdeVisualSetup(snapshots);
+}catch(e){document.getElementById('pde-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 function drawHeatmap(u){const c=document.getElementById('pde-canvas'),ctx=c.getContext('2d'),w=c.width,h=c.height,N=u.length;ctx.clearRect(0,0,w,h);const maxv=Math.max(...u.flat()),minv=Math.min(...u.flat()),d=maxv-minv||1,cw=w/N,ch=h/N;for(let i=0;i<N;i++)for(let j=0;j<N;j++){const t=(u[i][j]-minv)/d;ctx.fillStyle=`rgb(${Math.floor(240*t+15)},${Math.floor(80+120*(1-Math.abs(t-.5)*2))},${Math.floor(240*(1-t)+15)})`;ctx.fillRect(j*cw,i*ch,cw+1,ch+1)}}
