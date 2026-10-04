@@ -51,7 +51,17 @@
       <div class="row"><div><label>ε</label><input id="root-eps" type="number" step="any" value="0.000001"></div><div><label>Max iter.</label><input id="root-max" type="number" value="100"></div></div>
       <div class="buttons"><button onclick="solveRoot('bisection')">Teng ikkiga bo‘lish</button><button onclick="solveRoot('newton')">Newton</button><button onclick="solveRoot('vatar')">Vatarlar</button><button onclick="solveRoot('secant')">Secant</button><button class="secondary" onclick="compareRoots()">Taqqosla</button></div>
     </div>
-    <div class="card result-card"><h3>Natija</h3><div id="root-summary" class="summary">Misol kiriting va usulni tanlang.</div><canvas id="root-canvas" width="720" height="330"></canvas></div>
+    <div class="card result-card">
+  <h3>Natija va geometrik ma’no</h3>
+  <div id="root-summary" class="summary">Misol kiriting va usulni tanlang.</div>
+  <canvas id="root-canvas" width="720" height="360"></canvas>
+  <div class="visual-controls">
+    <button class="small secondary" onclick="rootVisualPrev()">← Iteratsiya</button>
+    <button class="small" onclick="rootVisualNext()">Keyingi iteratsiya →</button>
+    <button class="small secondary" onclick="playRootVisual()">▶ Animatsiya</button>
+  </div>
+  <div id="root-visual-note" class="visual-note">Usulni ishga tushiring — grafikda uning geometrik ma’nosi ko‘rinadi.</div>
+</div>
   </div>
   <div id="root-compare" class="card hidden"></div>
   <step-box data-key="root"></step-box>
