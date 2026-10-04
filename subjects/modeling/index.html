@@ -1,1 +1,126 @@
-<!DOCTYPE html><html lang="uz"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Matematik modellashtirish — MathLab</title><link rel="stylesheet" href="../../mathlab.css"></head><body><header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Matematik modellashtirish</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header><main><section class="hero" style="padding-bottom:55px"><div class="pill">MODUL LOYIHASI</div><h1 style="font-size:clamp(40px,6vw,70px)">Matematik modellashtirish</h1><p>Real hayotdagi vaziyatni tenglama, parametr va simulyatsiyaga aylantirish.</p></section><section class="section-title" style="padding-top:55px"><p>BUILD MAP</p><h2>Birinchi laboratoriyalar</h2></section><section class="subjects"><div class="subject"><div class="status build">REJADA</div><div class="num">01</div><h3>Eksponensial o‘sish</h3><p>Populyatsiya va foizli o‘sish: qachon ishlaydi, qachon buziladi.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">02</div><h3>Logistik model</h3><p>Sig‘im K paydo bo‘lganda o‘sish qanday sekinlashadi.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">03</div><h3>SIR epidemik model</h3><p>S, I, R guruhlari va parametrlarning epidemiya egri chizig‘iga ta’siri.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">04</div><h3>Predator–prey</h3><p>Lotka–Volterra va o‘zaro bog‘langan populyatsiyalar.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">05</div><h3>Model qurish ustaxonasi</h3><p>Muammo → faraz → o‘zgaruvchi → parametr → model → validatsiya.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div></section></main></body></html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Matematik modellashtirish — ILM Mizan MathLab</title>
+<link rel="stylesheet" href="../../mathlab.css">
+<link rel="stylesheet" href="modeling.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Matematik modellashtirish</small></div></div>
+  <a class="github" href="../../">← Bosh sahifa</a>
+</header>
+<main>
+<section class="model-hero">
+  <div class="pill">LIVE LAB • v1</div>
+  <h1>Matematik modellashtirish</h1>
+  <p>Real vaziyatni <b>faraz → o‘zgaruvchi → parametr → tenglama → simulyatsiya → tekshiruv</b> zanjirida modelga aylantiring.</p>
+</section>
+<nav class="lab-tabs">
+  <button class="lab-tab active" data-lab="exp">01 Eksponensial</button>
+  <button class="lab-tab" data-lab="logistic">02 Logistik</button>
+  <button class="lab-tab" data-lab="sir">03 SIR</button>
+  <button class="lab-tab" data-lab="workshop">04 Model ustaxonasi</button>
+</nav>
+
+<section id="exp" class="lab-panel active">
+  <div class="lesson-standard">
+    <article><span>NEGA KERAK?</span><p>Cheklovsiz foizli o‘sish: bank foizi, bakteriya ko‘payishi, dastlabki populyatsiya bosqichi.</p></article>
+    <article><span>HAYOTIY G‘OYA</span><p>Har bir davrda qancha ko‘p mavjud bo‘lsa, shuncha ko‘p yangi miqdor qo‘shiladi.</p></article>
+    <article><span>MODEL</span><p><b>dP/dt = rP</b>, yechim: <b>P(t)=P₀eʳᵗ</b></p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Parametrlar</h2>
+      <label>P₀ — boshlang‘ich miqdor <input id="exp-p0" type="number" value="1000"></label>
+      <label>r — o‘sish tezligi <input id="exp-r" type="number" step="0.01" value="0.08"></label>
+      <label>T — vaqt <input id="exp-t" type="number" value="30"></label>
+      <button onclick="runExp()">Simulyatsiya</button>
+      <div class="paper-box"><b>Qog‘ozda:</b><ol><li>O‘zgaruvchi: P(t).</li><li>Faraz: o‘sish tezligi P ga proporsional.</li><li>dP/dt=rP.</li><li>dP/P=r dt qilib ajratamiz.</li><li>ln P=rt+C → P=P₀eʳᵗ.</li></ol></div>
+      <div class="tradeoffs"><b>Afzallik:</b> sodda va tez. <b>Kamchilik:</b> resurs cheklovini hisobga olmaydi.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Natija</h2>
+      <div id="exp-summary" class="model-summary"></div>
+      <canvas id="exp-canvas" width="760" height="360"></canvas>
+      <div id="exp-note" class="model-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="logistic" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>NEGA KERAK?</span><p>Real populyatsiya cheksiz o‘smaydi. Oziqa, joy va resurslar o‘sishni sekinlashtiradi.</p></article>
+    <article><span>HAYOTIY G‘OYA</span><p>Populyatsiya kichik bo‘lsa tez o‘sadi; K sig‘imga yaqinlashganda o‘sish deyarli to‘xtaydi.</p></article>
+    <article><span>MODEL</span><p><b>dP/dt = rP(1−P/K)</b></p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Parametrlar</h2>
+      <label>P₀ <input id="log-p0" type="number" value="1000"></label>
+      <label>r <input id="log-r" type="number" step="0.01" value="0.2"></label>
+      <label>K — muhit sig‘imi <input id="log-k" type="number" value="10000"></label>
+      <label>T <input id="log-t" type="number" value="40"></label>
+      <button onclick="runLogistic()">Simulyatsiya</button>
+      <div class="paper-box"><b>Qog‘ozda model qurish:</b><ol><li>Cheksiz model: rP.</li><li>Cheklov faktori: 1−P/K.</li><li>Ikkalasini ko‘paytiramiz.</li><li>P≪K bo‘lsa model deyarli eksponensial.</li><li>P→K bo‘lsa dP/dt→0.</li></ol></div>
+      <div class="tradeoffs"><b>Afzallik:</b> to‘yinganlikni ko‘rsatadi. <b>Kamchilik:</b> K va r doimiy deb faraz qiladi.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Eksponensial bilan taqqoslash</h2>
+      <div id="log-summary" class="model-summary"></div>
+      <canvas id="log-canvas" width="760" height="360"></canvas>
+      <div id="log-note" class="model-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="sir" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>NEGA KERAK?</span><p>Epidemiyada kasallanish cho‘qqisi qachon bo‘ladi va parametrlar uni qanday o‘zgartiradi?</p></article>
+    <article><span>3 GURUH</span><p><b>S</b> — moyil, <b>I</b> — kasal, <b>R</b> — sog‘aygan/chiqqan.</p></article>
+    <article><span>MODEL</span><p>S′=−βSI/N, I′=βSI/N−γI, R′=γI</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Parametrlar</h2>
+      <label>N <input id="sir-n" type="number" value="10000"></label>
+      <label>I₀ <input id="sir-i0" type="number" value="10"></label>
+      <label>β — yuqish <input id="sir-beta" type="number" step="0.01" value="0.35"></label>
+      <label>γ — chiqish/sog‘ayish <input id="sir-gamma" type="number" step="0.01" value="0.10"></label>
+      <label>T — kun <input id="sir-t" type="number" value="120"></label>
+      <button onclick="runSIR()">Simulyatsiya</button>
+      <div class="paper-box"><b>Qog‘ozda fikrlash:</b><ol><li>S dan I ga oqim βSI/N.</li><li>I dan R ga oqim γI.</li><li>Jami S+I+R=N saqlanadi.</li><li>R₀≈β/γ — dastlabki tarqalish mezoni.</li></ol></div>
+      <div class="tradeoffs"><b>Afzallik:</b> oqimlarni sodda ko‘rsatadi. <b>Kamchilik:</b> aholi bir xil aralashadi deb faraz qiladi; bu real hayotning soddalashtirilgan modeli.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Epidemiya dinamikasi</h2>
+      <div id="sir-summary" class="model-summary"></div>
+      <canvas id="sir-canvas" width="760" height="360"></canvas>
+      <div id="sir-note" class="model-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="workshop" class="lab-panel">
+  <div class="workshop">
+    <div class="section-title"><p>MODEL BUILDER</p><h2>Real muammodan tenglamagacha</h2></div>
+    <div class="builder">
+      <div><span>1</span><h3>Muammo</h3><textarea id="w-problem" placeholder="Masalan: shahardagi taksilar soni va talab..."></textarea></div>
+      <div><span>2</span><h3>Asosiy o‘zgaruvchi</h3><textarea id="w-vars" placeholder="Nima vaqt bo‘yicha o‘zgaradi?"></textarea></div>
+      <div><span>3</span><h3>Farazlar</h3><textarea id="w-assumptions" placeholder="Nimani soddalashtiryapmiz?"></textarea></div>
+      <div><span>4</span><h3>Parametrlar</h3><textarea id="w-params" placeholder="Qanday doimiy yoki boshqaruvchi miqdorlar bor?"></textarea></div>
+      <div><span>5</span><h3>Tenglama / bog‘lanish</h3><textarea id="w-eq" placeholder="Masalan: dP/dt=rP(1-P/K)"></textarea></div>
+      <div><span>6</span><h3>Validatsiya</h3><textarea id="w-check" placeholder="Modelni qaysi real ma’lumot bilan tekshiramiz?"></textarea></div>
+    </div>
+    <button onclick="buildModelCard()">Model kartasini tuz</button>
+    <div id="model-card" class="generated-card hidden"></div>
+  </div>
+</section>
+</main>
+
+<footer><b>ILM Mizan MathLab</b><span>Matematik modellashtirish • Live Lab</span><small>Real muammo → Model → Simulyatsiya → Tekshiruv</small></footer>
+<script src="modeling.js"></script>
+</body>
+</html>
