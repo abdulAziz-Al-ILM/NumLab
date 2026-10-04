@@ -2,25 +2,64 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Python dasturlash — ILM Mizan MathLab</title>
+<title>Python Lab — ILM Mizan MathLab</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js"></script>
 <link rel="stylesheet" href="../../mathlab.css"><link rel="stylesheet" href="python.css">
 </head>
 <body>
 <header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Python dasturlash tili</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header>
 <main>
-<section class="py-hero"><div class="pill">LIVE LAB • v1</div><h1>Python execution visualizer</h1><p>Kodni faqat ishga tushirmang. <b>Kompyuter uni qadam-baqadam qanday bajarayotganini ko‘ring.</b></p></section>
+<section class="py-hero"><div class="pill">LIVE LAB • v2 • PYTHON 3.14</div><h1>Python Lab</h1><p><b>Istalgan Python kodini brauzerda ishga tushiring</b>, keyin sodda kodlar uchun execution visualizer bilan qadam-baqadam tahlil qiling.</p></section>
 <nav class="lab-tabs">
-<button class="lab-tab active" data-lab="runner">01 Kod bajarilishi</button>
-<button class="lab-tab" data-lab="loops">02 Sikl</button>
-<button class="lab-tab" data-lab="math">03 Matematik algoritm</button>
-<button class="lab-tab" data-lab="tasks">04 Mashqlar</button>
+<button class="lab-tab active" data-lab="real">01 Real Python</button>
+<button class="lab-tab" data-lab="runner">02 Qadamli visualizer</button>
+<button class="lab-tab" data-lab="loops">03 Sikl</button>
+<button class="lab-tab" data-lab="math">04 Matematik algoritm</button>
+<button class="lab-tab" data-lab="tasks">05 Mashqlar</button>
 </nav>
 
-<section id="runner" class="lab-panel active">
+<section id="real" class="lab-panel active">
+<div class="lesson-standard">
+<article><span>REAL PYTHON</span><p>Pyodide orqali Python 3.14 brauzerning o‘zida WebAssembly’da ishlaydi.</p></article>
+<article><span>ERKIN KOD</span><p>Funksiya, class, list/dict, recursion, comprehensions, standard library — mini-subset bilan cheklanmaydi.</p></article>
+<article><span>MATEMATIK PAKETLAR</span><p>Importlarni aniqlab, Pyodide paketlarini avtomatik yuklashga urinadi.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card">
+<h2>Python editor</h2>
+<textarea id="real-code" rows="18">from math import sqrt
+
+def newton_sqrt(a, x=1.0, n=8):
+    for _ in range(n):
+        x = 0.5 * (x + a / x)
+    return x
+
+print("sqrt(2) ≈", newton_sqrt(2))
+print("xato =", abs(newton_sqrt(2) - sqrt(2)))</textarea>
+<div class="examples">
+<button onclick="loadRealExample('function')">Funksiya</button>
+<button onclick="loadRealExample('list')">List</button>
+<button onclick="loadRealExample('class')">Class</button>
+<button onclick="loadRealExample('numpy')">NumPy</button>
+<button onclick="loadRealExample('bisection')">Bisection</button>
+</div>
+<div class="buttons"><button id="real-run" onclick="runRealPython()">▶ Run Python</button><button class="secondary-btn" onclick="clearRealOutput()">Tozalash</button></div>
+<div id="py-status" class="runtime-status">Python runtime birinchi Run’da yuklanadi.</div>
+<div class="paper-box"><b>Ikki rejim:</b> bu oynada real Python ishlaydi. Keyingi “Qadamli visualizer” bo‘limi esa boshlang‘ich konstruktsiyalarni satrma-satr pedagogik tahlil qiladi.</div>
+</div>
+<div class="lab-card">
+<h2>Console</h2>
+<pre id="real-output" class="console">Run Python tugmasini bosing.</pre>
+<div id="real-meta" class="py-note">Kod to‘liq brauzeringizda bajariladi; serverga hisoblash uchun yuborilmaydi.</div>
+</div>
+</div>
+</section>
+
+<section id="runner" class="lab-panel">
 <div class="lesson-standard">
 <article><span>G‘OYA</span><p>Dastur — satrlar ketma-ketligi emas, holatlarning o‘zgarishi.</p></article>
 <article><span>KO‘RINADIGAN NARSA</span><p>Har qadamda qaysi satr ishladi va o‘zgaruvchilar qanday o‘zgardi.</p></article>
-<article><span>CHEGARASI</span><p>Bu xavfsiz mini-Python subset; to‘liq Python interpreteri emas.</p></article>
+<article><span>VAZIFASI</span><p>Bu rejim to‘liq interpreter emas — real Python kodining sodda qismlarini pedagogik maqsadda qadam-baqadam ochadi.</p></article>
 </div>
 <div class="lab-grid">
 <div class="lab-card">
