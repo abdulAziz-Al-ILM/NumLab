@@ -1,3 +1,69 @@
+const PYODIDE_INDEX='https://cdn.jsdelivr.net/pyodide/v314.0.7/full/';
+let pyodideRuntime=null,pyodideLoading=null;
+const realExamples={
+function:`def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n-1)
+
+for n in range(1, 8):
+    print(n, factorial(n))`,
+list:`numbers = [8, 3, 12, 1, 7]
+squares = [x*x for x in numbers]
+print("numbers:", numbers)
+print("squares:", squares)
+print("max:", max(numbers))`,
+class:`class Vector:
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+    def norm(self):
+        return (self.x**2 + self.y**2)**0.5
+
+v = Vector(3, 4)
+print("norm =", v.norm())`,
+numpy:`import numpy as np
+A = np.array([[2., 1.], [5., 7.]])
+b = np.array([11., 13.])
+x = np.linalg.solve(A, b)
+print("x =", x)
+print("residual =", np.linalg.norm(A @ x - b))`,
+bisection:`def f(x):
+    return x**3 - x - 2
+
+def bisection(f, a, b, eps=1e-8):
+    while b-a > eps:
+        c = (a+b)/2
+        if f(a)*f(c) <= 0:
+            b = c
+        else:
+            a = c
+    return (a+b)/2
+
+root = bisection(f, 1, 2)
+print(root, f(root))`
+};
+function loadRealExample(k){document.getElementById('real-code').value=realExamples[k]}
+function clearRealOutput(){document.getElementById('real-output').textContent='';document.getElementById('real-meta').textContent=''}
+async function getPyodideRuntime(){
+  if(pyodideRuntime)return pyodideRuntime;
+  if(pyodideLoading)return pyodideLoading;
+  const status=document.getElementById('py-status');status.textContent='Python runtime yuklanmoqda…';
+  pyodideLoading=(async()=>{const p=await loadPyodide({indexURL:PYODIDE_INDEX});pyodideRuntime=p;status.innerHTML='<b>Python tayyor.</b> Endi kodlarni erkin sinashingiz mumkin.';return p})();
+  try{return await pyodideLoading}catch(e){pyodideLoading=null;status.textContent='Runtime yuklanmadi: '+e.message;throw e}
+}
+async function runRealPython(){
+  const btn=document.getElementById('real-run'),out=document.getElementById('real-output'),meta=document.getElementById('real-meta'),code=document.getElementById('real-code').value;
+  btn.disabled=true;btn.textContent='Ishlayapti…';out.textContent='';meta.textContent='';
+  try{
+    const py=await getPyodideRuntime();
+    await py.loadPackagesFromImports(code);
+    py.setStdout({batched:s=>{out.textContent+=s+'\n'}});py.setStderr({batched:s=>{out.textContent+='[stderr] '+s+'\n'}});
+    const t0=performance.now();const result=await py.runPythonAsync(code);const ms=performance.now()-t0;
+    if(result!==undefined&&result!==null){let shown;try{shown=result.toString()}catch{shown=String(result)}if(shown!=='None')out.textContent+='>>> '+shown+'\n';if(result&&result.destroy)result.destroy()}
+    meta.innerHTML='<b>Bajarildi.</b> '+ms.toFixed(1)+' ms. Import qilingan Pyodide paketlari kerak bo‘lsa avtomatik yuklandi.';
+  }catch(e){out.textContent+=e.toString();meta.innerHTML='<b>Xato:</b> traceback console’da ko‘rsatildi. Kodni tuzatib yana ishga tushiring.'}
+  finally{btn.disabled=false;btn.textContent='▶ Run Python'}
+}
 document.querySelectorAll('.lab-tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.lab-tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.lab-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.lab).classList.add('active')}));
 let steps=[],idx=0,timer=null;
 const examples={basic:'x = 2\ny = 3\nz = x + y\nprint(z)',if:'x = 7\nif x > 5:\n    y = 10\nprint(y)',loop:'sum = 0\nfor i in range(5):\n    sum = sum + i\nprint(sum)',newton:'x = 1\nfor i in range(5):\n    x = 0.5 * (x + 2 / x)\nprint(x)'};
