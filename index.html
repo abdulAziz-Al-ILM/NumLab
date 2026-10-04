@@ -36,14 +36,20 @@
 <main>
 <section id="roots" class="panel active">
   <div class="section-head"><div><span class="kicker">LAB 01</span><h2>Tenglama ildizini topish</h2></div><div class="formula">F(x)=0</div></div>
-  <div class="theory"><b>Istalgan tenglama kiriting.</b> Agar <code>=</code> bo‘lsa, NumLab chap tomon − o‘ng tomon qilib <i>F(x)=0</i> ga keltiradi. Bisection uchun interval ildizni qamramasa, dastur avtomatik qidirishga urinadi.</div>
+  <div class="theory"><b>Nega kerak?</b> Ko‘p tenglamalarda ildizni formula bilan aniq topib bo‘lmaydi. Sonli usullar ildizga ketma-ket yaqinlashadi. <b>Hayotiy misol:</b> kredit stavkasi, issiqlik balansi, optimal tezlik yoki fizik modeldagi noma’lum parametr tenglama ichida yashirin bo‘lsa, kompyuter ham aynan shunday yaqinlashuv usullaridan foydalanadi.</div>
+  <div class="method-guide">
+    <div class="guide-card"><h3>Kesmani teng ikkiga bo‘lish</h3><p><b>Qog‘ozda:</b> f(a)·f(b)&lt;0 bo‘lgan [a,b] olinadi → c=(a+b)/2 topiladi → f(c) ishorasiga qarab kerakli yarim kesma qoldiriladi → takrorlanadi.</p><p><b>Afzallik:</b> juda ishonchli. <b>Kamchilik:</b> sekinroq.</p><p class="analogy"><b>Analogiya:</b> yashirilgan sonni “kattami-kichikmi?” deb intervalni har safar yarmiga qisqartirib topish.</p></div>
+    <div class="guide-card"><h3>Newton</h3><p><b>Qog‘ozda:</b> x₀ tanlanadi → f(x₀) va f′(x₀) hisoblanadi → x₁=x₀−f(x₀)/f′(x₀) → yangi nuqtada takrorlanadi.</p><p><b>Afzallik:</b> ildiz yaqinida juda tez. <b>Kamchilik:</b> hosila kerak va yomon x₀ bilan adashishi mumkin.</p><p class="analogy"><b>Analogiya:</b> egri yo‘lning ayni nuqtadagi yo‘nalishini davom ettirib, qayerda yerga tegishini taxmin qilish.</p></div>
+    <div class="guide-card"><h3>Vatarlar</h3><p><b>Qog‘ozda:</b> grafikdagi ikki nuqta to‘g‘ri chiziq — <i>vatar</i> bilan tutashtiriladi → vatar Ox bilan qayerda kesishsa, yangi yaqinlashish olinadi → ishoraga qarab kesma yangilanadi.</p><p><b>Afzallik:</b> hosila talab qilmaydi va ildizni qamrab turuvchi intervalni saqlaydi. <b>Kamchilik:</b> ayrim funksiyalarda bir uch juda sekin siljishi mumkin.</p><p class="analogy"><b>Analogiya:</b> egri yo‘lning ikki nuqtasini arqon bilan tutashtirib, arqon yer chizig‘ini qayerda kesishini ko‘rish.</p></div>
+    <div class="guide-card"><h3>Secant</h3><p><b>Qog‘ozda:</b> oxirgi ikki yaqinlashish olinadi → ular orasidagi sekantning Ox bilan kesishishi yangi x bo‘ladi → nuqtalar oldinga suriladi.</p><p><b>Afzallik:</b> hosila kerak emas, ko‘pincha tez. <b>Kamchilik:</b> ildizni qamrab turuvchi interval saqlanmaydi.</p><p class="analogy"><b>Analogiya:</b> oxirgi ikki kuzatuvdan trend chizig‘i chizib, nolga qachon yetishini bashorat qilish.</p></div>
+  </div>
   <div class="grid2">
     <div class="card">
       <label>Tenglama yoki F(x)</label><input id="root-f" value="x^3-x-2=0">
       <div class="examples">Misollar: <button onclick="setVal('root-f','x^2=2')">x²=2</button><button onclick="setVal('root-f','sin x=0.7')">sin x=0.7</button><button onclick="setVal('root-f','e^x=3x')">eˣ=3x</button></div>
       <div class="row"><div><label>a</label><input id="root-a" type="number" step="any" value="1"></div><div><label>b</label><input id="root-b" type="number" step="any" value="2"></div></div>
       <div class="row"><div><label>ε</label><input id="root-eps" type="number" step="any" value="0.000001"></div><div><label>Max iter.</label><input id="root-max" type="number" value="100"></div></div>
-      <div class="buttons"><button onclick="solveRoot('bisection')">Bisection</button><button onclick="solveRoot('newton')">Newton</button><button onclick="solveRoot('secant')">Secant</button><button class="secondary" onclick="compareRoots()">Taqqosla</button></div>
+      <div class="buttons"><button onclick="solveRoot('bisection')">Teng ikkiga bo‘lish</button><button onclick="solveRoot('newton')">Newton</button><button onclick="solveRoot('vatar')">Vatarlar</button><button onclick="solveRoot('secant')">Secant</button><button class="secondary" onclick="compareRoots()">Taqqosla</button></div>
     </div>
     <div class="card result-card"><h3>Natija</h3><div id="root-summary" class="summary">Misol kiriting va usulni tanlang.</div><canvas id="root-canvas" width="720" height="330"></canvas></div>
   </div>
@@ -52,7 +58,7 @@
 </section>
 <section id="gauss" class="panel">
   <div class="section-head"><div><span class="kicker">LAB 02</span><h2>Chiziqli tenglamalar sistemasi</h2></div><div class="formula">Ax=b</div></div>
-  <div class="theory">Istalgan o‘lchamdagi kvadrat sistema. Ikki xil format qabul qilinadi: <b>kengaytirilgan matritsa</b> yoki <b>tenglamalar</b> (<code>2x+3y=7</code> kabi).</div>
+  <div class="theory"><b>Nega kerak?</b> Bir vaqtning o‘zida bir nechta noma’lum bir-biriga bog‘langan bo‘lsa, chiziqli sistema hosil bo‘ladi: elektr zanjirlari, konstruktsiya kuchlari, iqtisodiy balans, transport oqimlari. <b>Qog‘ozda:</b> tenglamalar [A|b] matritsaga yoziladi → pastdagi elementlar nol qilinadi → oxirgi tenglamadan boshlab teskari yuriladi. <b>Afzallik:</b> aniq va tizimli. <b>Kamchilik:</b> katta matritsalarda hisob ko‘payadi.</div>
   <div class="grid2">
     <div class="card">
       <label>Kiritish turi</label><select id="gauss-mode" onchange="switchGaussMode()"><option value="matrix">[A|b] matritsa</option><option value="equations">Tenglamalar</option></select>
@@ -70,7 +76,7 @@
 </section>
 <section id="interp" class="panel">
   <div class="section-head"><div><span class="kicker">LAB 03</span><h2>Interpolatsiya</h2></div><div class="formula">Pₙ(xᵢ)=yᵢ</div></div>
-  <div class="theory">Istalgan miqdordagi tugun. x va y qiymatlari vergul, nuqtali vergul yoki bo‘shliq bilan yozilishi mumkin.</div>
+  <div class="theory"><b>Nega kerak?</b> Jadvalda faqat ayrim nuqtalar ma’lum, lekin ularning orasidagi qiymat kerak bo‘lsa interpolatsiya ishlatiladi: sensor kalibrovkasi, tajriba natijalari, jadval funksiyalari. <b>Qog‘ozda:</b> Lagrange’da har bir Lᵢ(x) bazis ko‘phadi quriladi; Newton’da bo‘lingan ayirmalar jadvali tuziladi. <b>Afzallik:</b> mavjud ma’lumotdan oraliq qiymat topiladi. <b>Kamchilik:</b> juda ko‘p yoki yomon joylashgan tugunlarda tebranish paydo bo‘lishi mumkin.</div>
   <div class="grid2">
     <div class="card"><label>x tugunlar</label><input id="ix" value="0,1,2,3"><label>y qiymatlar</label><input id="iy" value="1,2,5,10"><label>x*</label><input id="itarget" value="1.5"><div class="buttons"><button onclick="solveInterp('lagrange')">Lagrange</button><button onclick="solveInterp('newton')">Newton</button></div></div>
     <div class="card result-card"><h3>Natija</h3><div id="interp-summary" class="summary">Tugunlarni kiriting.</div><canvas id="interp-canvas" width="720" height="330"></canvas></div>
