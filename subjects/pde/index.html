@@ -1,1 +1,137 @@
-<!DOCTYPE html><html lang="uz"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Matematik fizika tenglamalari — MathLab</title><link rel="stylesheet" href="../../mathlab.css"></head><body><header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Matematik fizika tenglamalari</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header><main><section class="hero" style="padding-bottom:55px"><div class="pill">MODUL LOYIHASI</div><h1 style="font-size:clamp(40px,6vw,70px)">Matematik fizika tenglamalari</h1><p>Tenglamani formuladan real fizik jarayonga aylantiradigan laboratoriya.</p></section><section class="section-title" style="padding-top:55px"><p>BUILD MAP</p><h2>Birinchi laboratoriyalar</h2></section><section class="subjects"><div class="subject"><div class="status build">REJADA</div><div class="num">01</div><h3>PDE klassifikatsiyasi</h3><p>Elliptik, parabolik, giperbolik tenglamalarni diskriminant va ma’no orqali ajratish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">02</div><h3>Issiqlik tenglamasi</h3><p>Sterjenda issiqlik tarqalishini vaqt bo‘yicha animatsiya qilish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">03</div><h3>To‘lqin tenglamasi</h3><p>Tor tebranishi, boshlang‘ich siljish va tezlikning ta’siri.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">04</div><h3>Laplace tenglamasi</h3><p>Chegaraviy qiymatlardan muvozanat holatini qurish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">05</div><h3>Fourier usuli</h3><p>Ajratish usuli va Fourier koeffitsiyentlarini qog‘ozda ham, grafikda ham qurish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div></section></main></body></html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Matematik fizika tenglamalari — ILM Mizan MathLab</title>
+<link rel="stylesheet" href="../../mathlab.css">
+<link rel="stylesheet" href="pde.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Matematik fizika tenglamalari</small></div></div>
+  <a class="github" href="../../">← Bosh sahifa</a>
+</header>
+<main>
+<section class="pde-hero">
+  <div class="pill">LIVE LAB • v1</div>
+  <h1>Matematik fizika tenglamalari</h1>
+  <p>Tenglamani <b>klassifikatsiya → fizik ma’no → qog‘ozdagi yechim → animatsiya → tajriba</b> zanjirida ko‘ring.</p>
+</section>
+
+<nav class="lab-tabs">
+  <button class="lab-tab active" data-lab="classify">01 Klassifikatsiya</button>
+  <button class="lab-tab" data-lab="heat">02 Issiqlik</button>
+  <button class="lab-tab" data-lab="wave">03 To‘lqin</button>
+  <button class="lab-tab" data-lab="laplace">04 Laplace</button>
+</nav>
+
+<section id="classify" class="lab-panel active">
+  <div class="lesson-standard">
+    <article><span>UMUMIY KO‘RINISH</span><p><b>A uₓₓ + 2B uₓᵧ + C uᵧᵧ + ... = 0</b></p></article>
+    <article><span>MEZON</span><p><b>D = B² − AC</b></p></article>
+    <article><span>MA’NO</span><p>D&lt;0 elliptik, D=0 parabolik, D&gt;0 giperbolik.</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Koeffitsiyentlarni kiriting</h2>
+      <label>A <input id="cl-a" type="number" value="1"></label>
+      <label>B <input id="cl-b" type="number" value="0"></label>
+      <label>C <input id="cl-c" type="number" value="1"></label>
+      <button onclick="classifyPDE()">Klassifikatsiya qil</button>
+      <div class="paper-box"><b>Qog‘ozda:</b><ol><li>A, B, C ni ajrating.</li><li>D=B²−AC ni hisoblang.</li><li>D ishorasiga qarab turini yozing.</li></ol></div>
+    </div>
+    <div class="lab-card">
+      <h2>Natija</h2>
+      <div id="class-summary" class="pde-summary"></div>
+      <div class="type-grid">
+        <div><b>Elliptik</b><span>muvozanat</span><small>Laplace, Poisson</small></div>
+        <div><b>Parabolik</b><span>diffuziya</span><small>Issiqlik</small></div>
+        <div><b>Giperbolik</b><span>to‘lqin</span><small>Wave equation</small></div>
+      </div>
+      <div id="class-note" class="pde-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="heat" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>MODEL</span><p><b>uₜ = αuₓₓ</b></p></article>
+    <article><span>HAYOTIY MA’NO</span><p>Issiqlik yuqori temperaturadan past temperaturaga tarqaladi.</p></article>
+    <article><span>QOG‘OZDA</span><p>Ajratish usuli: u=X(x)T(t) → eigenvalue masala → Fourier qatori.</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Sterjen tajribasi</h2>
+      <label>α — diffuziya <input id="heat-alpha" type="number" step="0.01" value="0.15"></label>
+      <label>Boshlang‘ich amplituda <input id="heat-amp" type="number" value="100"></label>
+      <label>Modalar soni <input id="heat-modes" type="number" min="1" max="8" value="3"></label>
+      <label>Vaqt <input id="heat-time" type="range" min="0" max="5" step="0.05" value="0"></label>
+      <div class="buttons"><button onclick="drawHeat()">Yangila</button><button class="secondary-btn" onclick="playHeat()">▶ Animatsiya</button></div>
+      <div class="paper-box"><b>Qog‘ozdagi g‘oya:</b><ol><li>u(x,t)=X(x)T(t).</li><li>X″/X = T′/(αT) = −λ.</li><li>X uchun sinus eigenfunksiyalar.</li><li>T da e^(−αλt) so‘nish.</li><li>Boshlang‘ich profil Fourier koeffitsiyentlarga ajraladi.</li></ol></div>
+    </div>
+    <div class="lab-card">
+      <h2>Temperatura profili</h2>
+      <div id="heat-summary" class="pde-summary"></div>
+      <canvas id="heat-canvas" width="760" height="360"></canvas>
+      <div id="heat-note" class="pde-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="wave" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>MODEL</span><p><b>uₜₜ = c²uₓₓ</b></p></article>
+    <article><span>HAYOTIY MA’NO</span><p>Tor, tovush, elastik muhitdagi tebranishlar.</p></article>
+    <article><span>MUHIM FARQ</span><p>Issiqlik so‘nadi; ideal to‘lqin energiyani oldinga-orqaga tashiydi.</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Tor parametrlar</h2>
+      <label>c — to‘lqin tezligi <input id="wave-c" type="number" step="0.1" value="1"></label>
+      <label>Amplituda <input id="wave-amp" type="number" value="1"></label>
+      <label>Moda n <input id="wave-n" type="number" min="1" max="8" value="1"></label>
+      <label>Vaqt <input id="wave-time" type="range" min="0" max="10" step="0.05" value="0"></label>
+      <div class="buttons"><button onclick="drawWave()">Yangila</button><button class="secondary-btn" onclick="playWave()">▶ Animatsiya</button></div>
+      <div class="paper-box"><b>Qog‘ozda:</b><ol><li>u=X(x)T(t).</li><li>X″+λX=0.</li><li>Mahkamlangan uchlar → Xₙ=sin(nπx).</li><li>Tₙ=A cos(nπct)+B sin(nπct).</li></ol></div>
+    </div>
+    <div class="lab-card">
+      <h2>Tor tebranishi</h2>
+      <div id="wave-summary" class="pde-summary"></div>
+      <canvas id="wave-canvas" width="760" height="360"></canvas>
+      <div id="wave-note" class="pde-note"></div>
+    </div>
+  </div>
+</section>
+
+<section id="laplace" class="lab-panel">
+  <div class="lesson-standard">
+    <article><span>MODEL</span><p><b>uₓₓ + uᵧᵧ = 0</b></p></article>
+    <article><span>HAYOTIY MA’NO</span><p>Barqaror temperatura yoki elektrostatik potensial.</p></article>
+    <article><span>DISKRET G‘OYA</span><p>Ichki nuqta to‘rtta qo‘shnisining o‘rtachasi.</p></article>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <h2>Chegaralar</h2>
+      <label>Yuqori <input id="lap-top" type="number" value="100"></label>
+      <label>Past <input id="lap-bottom" type="number" value="0"></label>
+      <label>Chap <input id="lap-left" type="number" value="0"></label>
+      <label>O‘ng <input id="lap-right" type="number" value="0"></label>
+      <label>To‘r N <input id="lap-n" type="number" min="6" max="35" value="16"></label>
+      <label>Iteratsiya limiti <input id="lap-iters" type="number" value="500"></label>
+      <button onclick="runLaplace()">Hisobla</button>
+      <div class="paper-box"><b>Qog‘ozda:</b> uᵢⱼ=(uᵢ₋₁ⱼ+uᵢ₊₁ⱼ+uᵢⱼ₋₁+uᵢⱼ₊₁)/4 formulani ichki tugunlarda qayta-qayta ishlating.</div>
+    </div>
+    <div class="lab-card">
+      <h2>Potensial / temperatura xaritasi</h2>
+      <div id="lap-summary" class="pde-summary"></div>
+      <canvas id="lap-canvas" width="760" height="420"></canvas>
+      <div id="lap-note" class="pde-note"></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer><b>ILM Mizan MathLab</b><span>Matematik fizika tenglamalari • Live Lab</span><small>Formula → Fizik ma’no → Ajratish → Vizual tajriba</small></footer>
+<script src="pde.js"></script>
+</body>
+</html>
