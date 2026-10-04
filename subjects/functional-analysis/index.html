@@ -1,1 +1,96 @@
-<!DOCTYPE html><html lang="uz"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Funksional analiz — MathLab</title><link rel="stylesheet" href="../../mathlab.css"></head><body><header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Funksional analiz</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header><main><section class="hero" style="padding-bottom:55px"><div class="pill">MODUL LOYIHASI</div><h1 style="font-size:clamp(40px,6vw,70px)">Funksional analiz</h1><p>Abstrakt fazolarni chizma, tajriba va qarshi misollar orqali his qilish.</p></section><section class="section-title" style="padding-top:55px"><p>BUILD MAP</p><h2>Birinchi laboratoriyalar</h2></section><section class="subjects"><div class="subject"><div class="status build">REJADA</div><div class="num">01</div><h3>Metrik fazolar</h3><p>Masofa aksiomalari, turli metrikalar va bir xil nuqtalar geometriyasining qanday o‘zgarishi.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">02</div><h3>Normallangan fazolar</h3><p>L₁, L₂, L∞ birlik sharlarini interaktiv solishtirish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">03</div><h3>Banach fazosi</h3><p>Cauchy ketma-ketligi va to‘liqlikni intuitiv ko‘rish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">04</div><h3>Hilbert fazosi</h3><p>Ichki ko‘paytma, ortogonallik, proyeksiya va eng yaxshi yaqinlashish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div><div class="subject"><div class="status build">REJADA</div><div class="num">05</div><h3>Chiziqli operatorlar</h3><p>Operator normasi, uzluksizlik va spektrga kirish.</p><span>Nazariya → qog‘oz → vizual → hisob → mashq</span></div></section></main></body></html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Funksional analiz — ILM Mizan MathLab</title>
+<link rel="stylesheet" href="../../mathlab.css"><link rel="stylesheet" href="fa.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Funksional analiz</small></div></div><a class="github" href="../../">← Bosh sahifa</a></header>
+<main>
+<section class="fa-hero"><div class="pill">LIVE LAB • v1</div><h1>Funksional analiz</h1><p>Abstrakt ta’riflarni <b>geometriya → intuitiv ma’no → qog‘ozdagi tekshiruv → interaktiv tajriba</b> orqali ko‘ring.</p></section>
+<nav class="lab-tabs">
+<button class="lab-tab active" data-lab="norm">01 Norma</button>
+<button class="lab-tab" data-lab="metric">02 Metrika</button>
+<button class="lab-tab" data-lab="cauchy">03 Cauchy / Banach</button>
+<button class="lab-tab" data-lab="hilbert">04 Hilbert proyeksiya</button>
+</nav>
+
+<section id="norm" class="lab-panel active">
+<div class="lesson-standard">
+<article><span>G‘OYA</span><p>Norma — vektor yoki funksiyaning “kattaligi”.</p></article>
+<article><span>AKSIOMALAR</span><p>Musbatlik, gomogenlik, uchburchak tengsizlik.</p></article>
+<article><span>MUHIM FIKR</span><p>Bir xil nuqtalar, turli norma → boshqa geometriya.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card">
+<h2>Nuqta va norma</h2>
+<label>x <input id="norm-x" type="number" step="0.1" value="0.7"></label>
+<label>y <input id="norm-y" type="number" step="0.1" value="0.4"></label>
+<label>Norma <select id="norm-type" onchange="drawNorm()"><option value="1">L₁</option><option value="2" selected>L₂</option><option value="inf">L∞</option></select></label>
+<button onclick="drawNorm()">Ko‘rsat</button>
+<div class="paper-box"><b>Qog‘ozda:</b><ul><li>‖x‖₁=|x₁|+|x₂|</li><li>‖x‖₂=√(x₁²+x₂²)</li><li>‖x‖∞=max(|x₁|,|x₂|)</li></ul></div>
+<div class="tradeoffs"><b>Hayotiy analogiya:</b> bir joyga borish masofasi “qush kabi to‘g‘ri”, “ko‘chalar bo‘ylab”, yoki “eng katta koordinata farqi” deb turlicha o‘lchanishi mumkin.</div>
+</div>
+<div class="lab-card"><h2>Birlik shar va nuqta</h2><div id="norm-summary" class="fa-summary"></div><canvas id="norm-canvas" width="720" height="420"></canvas><div id="norm-note" class="fa-note"></div></div>
+</div>
+</section>
+
+<section id="metric" class="lab-panel">
+<div class="lesson-standard">
+<article><span>G‘OYA</span><p>Metrika — ikki obyekt orasidagi masofa qoidasi.</p></article>
+<article><span>SHART</span><p>d(x,y)≥0, simmetrik, 0 faqat x=y da, triangle inequality.</p></article>
+<article><span>NEGA KERAK?</span><p>“Yaqinlashish”, “uzluksizlik” va “Cauchy” masofaga bog‘liq.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card"><h2>Ikki nuqta</h2>
+<label>x₁ <input id="m-x1" type="number" step="0.1" value="0"></label>
+<label>y₁ <input id="m-y1" type="number" step="0.1" value="0"></label>
+<label>x₂ <input id="m-x2" type="number" step="0.1" value="3"></label>
+<label>y₂ <input id="m-y2" type="number" step="0.1" value="2"></label>
+<button onclick="drawMetric()">Masofalarni solishtir</button>
+<div class="paper-box"><b>Qog‘ozda:</b> bir xil ikki nuqta uchun d₁, d₂, d∞ ni alohida hisoblang. Metrika faqat son emas — fazoning geometriyasini belgilaydi.</div>
+</div>
+<div class="lab-card"><h2>Masofa</h2><div id="metric-summary" class="fa-summary"></div><canvas id="metric-canvas" width="720" height="420"></canvas><div class="fa-note">L₂ — to‘g‘ri chiziq, L₁ — “Manhattan” yo‘li. Bir xil nuqtalar, boshqa geometriya.</div></div>
+</div>
+</section>
+
+<section id="cauchy" class="lab-panel">
+<div class="lesson-standard">
+<article><span>CAUCHY</span><p>Ketma-ketlik hadlari o‘zaro tobora yaqinlashadi.</p></article>
+<article><span>TO‘LIQLIK</span><p>Har bir Cauchy ketma-ketlikning limiti fazoning ichida qoladi.</p></article>
+<article><span>BANACH</span><p>To‘liq normallangan fazo.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card"><h2>Ketma-ketlik tajribasi</h2>
+<label>Ketma-ketlik <select id="seq-type" onchange="drawSequence()"><option value="sqrt2">√2 ga ratsional yaqinlashuv</option><option value="one">1/n</option></select></label>
+<label>N <input id="seq-n" type="number" min="3" max="30" value="12"></label>
+<button onclick="drawSequence()">Ko‘rsat</button>
+<div class="paper-box"><b>Qog‘ozda:</b> ε&gt;0 berilganda shunday N topish kerakki m,n&gt;N bo‘lsa |xₙ−xₘ|&lt;ε.</div>
+</div>
+<div class="lab-card"><h2>Cauchy va “limit qayerda?”</h2><div id="seq-summary" class="fa-summary"></div><canvas id="seq-canvas" width="720" height="420"></canvas><div id="seq-note" class="fa-note"></div></div>
+</div>
+</section>
+
+<section id="hilbert" class="lab-panel">
+<div class="lesson-standard">
+<article><span>G‘OYA</span><p>Hilbert fazoda uzunlik bilan birga burchak/ortogonallik ham bor.</p></article>
+<article><span>PROYEKSIYA</span><p>Vektorni qism fazoga eng yaqin nuqta sifatida tushirish.</p></article>
+<article><span>NEGA KERAK?</span><p>Least squares, Fourier, signal processing va optimal approximation asosida shu g‘oya yotadi.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card"><h2>Vektor va chiziq</h2>
+<label>v=(x,y): x <input id="h-x" type="number" step="0.1" value="2"></label>
+<label>y <input id="h-y" type="number" step="0.1" value="3"></label>
+<label>Qism fazo yo‘nalishi a <input id="h-a" type="number" step="0.1" value="1"></label>
+<label>b <input id="h-b" type="number" step="0.1" value="1"></label>
+<button onclick="drawHilbert()">Proyeksiyani top</button>
+<div class="paper-box"><b>Qog‘ozda:</b> projᵤ(v)=[(v·u)/(u·u)]u. Farq v−projᵤ(v) qism fazoga ortogonal bo‘ladi.</div>
+</div>
+<div class="lab-card"><h2>Eng yaqin nuqta</h2><div id="hilbert-summary" class="fa-summary"></div><canvas id="hilbert-canvas" width="720" height="420"></canvas><div class="fa-note"><b>Intuitsiya:</b> soyani chiziqqa perpendikulyar tushirish — eng yaqin nuqtani beradi.</div></div>
+</div>
+</section>
+</main>
+<footer><b>ILM Mizan MathLab</b><span>Funksional analiz • Live Lab</span><small>Abstrakt fazo → Geometriya → Intuitsiya → Qog‘ozdagi tekshiruv</small></footer>
+<script src="fa.js"></script>
+</body></html>
