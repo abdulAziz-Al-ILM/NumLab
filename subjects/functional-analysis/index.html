@@ -14,6 +14,7 @@
 <button class="lab-tab" data-lab="metric">02 Metrika</button>
 <button class="lab-tab" data-lab="cauchy">03 Cauchy / Banach</button>
 <button class="lab-tab" data-lab="hilbert">04 Hilbert proyeksiya</button>
+<button class="lab-tab" data-lab="functions">05 Funksiya fazosi</button>
 </nav>
 
 <section id="norm" class="lab-panel active">
@@ -88,6 +89,32 @@
 <div class="paper-box"><b>Qog‘ozda:</b> projᵤ(v)=[(v·u)/(u·u)]u. Farq v−projᵤ(v) qism fazoga ortogonal bo‘ladi.</div>
 </div>
 <div class="lab-card"><h2>Eng yaqin nuqta</h2><div id="hilbert-summary" class="fa-summary"></div><canvas id="hilbert-canvas" width="720" height="420"></canvas><div class="fa-note"><b>Intuitsiya:</b> soyani chiziqqa perpendikulyar tushirish — eng yaqin nuqtani beradi.</div></div>
+</div>
+</section>
+
+<section id="functions" class="lab-panel">
+<div class="lesson-standard">
+<article><span>FUNKSION OBYEKT</span><p>Endi “vektor” bitta nuqta emas, butun funksiya bo‘lishi mumkin.</p></article>
+<article><span>NORMALAR</span><p>L¹, L² va L∞ normani sonli integral/max orqali baholaymiz.</p></article>
+<article><span>MASOFA</span><p>d(f,g)=‖f−g‖ orqali ikki funksiyaning qanchalik yaqinligini o‘lchaymiz.</p></article>
+</div>
+<div class="lab-grid">
+<div class="lab-card">
+<h2>Ikki funksiyani kiriting</h2>
+<label>f(x) <input id="fn-f" value="sin(pi*x)"></label>
+<label>g(x) <input id="fn-g" value="x*(1-x)*4"></label>
+<label>a <input id="fn-a" type="number" value="0"></label>
+<label>b <input id="fn-b" type="number" value="1"></label>
+<div class="examples"><button onclick="loadFnExample('sine')">Sinus vs parabola</button><button onclick="loadFnExample('approx')">Yaqin funksiyalar</button><button onclick="loadFnExample('poly')">Polinomlar</button></div>
+<button onclick="runFunctionSpace()">Hisobla va solishtir</button>
+<div class="paper-box"><b>Qog‘ozda:</b><ul><li>‖f‖₁=∫|f|dx</li><li>‖f‖₂=(∫|f|²dx)¹ᐟ²</li><li>‖f‖∞=max|f(x)|</li><li>d₂(f,g)=‖f−g‖₂</li></ul></div>
+</div>
+<div class="lab-card">
+<h2>Funksiya fazosida masofa</h2>
+<div id="fn-summary" class="fa-summary"></div>
+<canvas id="fn-canvas" width="720" height="420"></canvas>
+<div id="fn-note" class="fa-note"></div>
+</div>
 </div>
 </section>
 </main>
