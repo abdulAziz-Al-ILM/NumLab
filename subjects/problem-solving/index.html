@@ -20,12 +20,13 @@
 
   <section class="tutor-main">
     <div class="problem-card">
-      <div class="problem-head"><span id="problem-topic">Algebraik ajratish</span><button onclick="newProblem()">Yangi masala</button></div>
+      <div class="problem-head"><span id="problem-topic">Algebraik ajratish</span><div class="problem-actions"><label>Qiyinlik <select id="difficulty" onchange="newProblem()"><option value="easy">Oson</option><option value="medium" selected>O‘rta</option><option value="hard">Qiyin</option></select></label><button onclick="newProblem()">Yangi masala</button></div></div>
       <h2 id="problem-text"></h2>
       <p id="problem-goal" class="goal"></p>
       <label>Javobingiz / urinish <textarea id="attempt" rows="4" placeholder="Avval o‘zingiz urinib ko‘ring..."></textarea></label>
       <div class="buttons"><button onclick="checkAttempt()">Tekshir</button><button class="secondary-btn" onclick="showHint()">Hint</button><button class="secondary-btn" onclick="showNextStep()">Keyingi qadam</button><button class="secondary-btn" onclick="showSolution()">To‘liq yechim</button></div>
       <div id="feedback" class="feedback"></div>
+      <div class="session-bar"><span>To‘g‘ri: <b id="score-correct">0</b></span><span>Urinish: <b id="score-attempts">0</b></span><span>Hint: <b id="score-hints">0</b></span><button class="secondary-btn" onclick="resetSession()">Sessiyani tozalash</button></div>
     </div>
 
     <div class="support-grid">
