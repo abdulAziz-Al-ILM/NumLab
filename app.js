@@ -154,14 +154,119 @@ function parseMatrix(s){return s.trim().split(/\n+/).map(r=>r.trim().split(/[\s;
 function parseLinearEquations(s){const lines=s.trim().split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!lines.length)throw new Error('Tenglamalar kiritilmagan.');const varSet=new Set();for(const line of lines){for(const m of line.matchAll(/x\d+|[a-zA-Z]/g)){const v=m[0];if(!FN.includes(v)&&v!=='e')varSet.add(v)}}const vars=[...varSet];if(vars.length!==lines.length)throw new Error(`Kvadrat sistema kerak: ${lines.length} ta tenglama, ${vars.length} ta o‘zgaruvchi topildi.`);const M=[];for(const line of lines){const parts=line.split('=');if(parts.length!==2)throw new Error(`Tenglama noto‘g‘ri: ${line}`);const coeff=[];for(const v of vars){const replacedVars=Object.fromEntries(vars.map(z=>[z,0]));replacedVars[v]=1;const val=evaluateLinear(parts[0],replacedVars)-evaluateLinear(parts[0],Object.fromEntries(vars.map(z=>[z,0])));coeff.push(val)}const zero=evaluateLinear(parts[0],Object.fromEntries(vars.map(z=>[z,0])));const rhs=evaluateLinear(parts[1],Object.fromEntries(vars.map(z=>[z,0])))-zero;M.push([...coeff,rhs])}return{M,vars}}
 function evaluateLinear(raw,obj){let s=String(raw).trim().replace(/−/g,'-').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/,/g,'.');s=s.replace(/(\d)\s*(?=[A-Za-z])/g,'$1*');const ids=s.match(/[A-Za-z_]\w*/g)||[];for(const id of ids){if(!(id in obj))throw new Error(`Noma’lum o‘zgaruvchi: ${id}`)}const vars=Object.keys(obj);return new Function(...vars,`"use strict";return (${s});`)(...vars.map(v=>obj[v]))}
 function matrixText(M){return M.map(r=>r.map(v=>fmt(v).padStart(12)).join(' ')).join('\n')}
-function solveGauss(){try{let M,vars;const mode=document.getElementById('gauss-mode').value;if(mode==='matrix'){M=parseMatrix(document.getElementById('gauss-mat').value);vars=Array.from({length:M.length},(_,i)=>`x${i+1}`)}else({M,vars}=parseLinearEquations(document.getElementById('gauss-eqs').value));const n=M.length;if(!n||M.some(r=>r.length!==n+1||r.some(v=>!Number.isFinite(v))))throw new Error('n×(n+1) kengaytirilgan matritsa kerak.');const original=M.map(r=>r.slice()),steps=[{title:'Boshlang‘ich kengaytirilgan matritsa',body:`<div class="matrix">${esc(matrixText(M))}</div>`}];for(let k=0;k<n;k++){let p=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;if(Math.abs(M[p][k])<1e-14)throw new Error('Matritsa singulyar yoki sistema yagona yechimga ega emas.');if(p!==k){[M[p],M[k]]=[M[k],M[p]];steps.push({title:`Pivot tanlash: R${k+1} ↔ R${p+1}`,body:`Sonli barqarorlik uchun modul bo‘yicha eng katta pivot yuqoriga olindi.<div class="matrix">${esc(matrixText(M))}</div>`})}for(let i=k+1;i<n;i++){const m=M[i][k]/M[k][k];for(let j=k;j<=n;j++)M[i][j]-=m*M[k][j];steps.push({title:`R${i+1} dan x${k+1} ni yo‘qotish`,body:`<div class="math">m = a${i+1}${k+1}/a${k+1}${k+1} = ${fmt(m)}\nR${i+1} ← R${i+1} − m·R${k+1}</div><div class="matrix">${esc(matrixText(M))}</div>`})}}
-const x=Array(n).fill(0);for(let i=n-1;i>=0;i--){let s=M[i][n];for(let j=i+1;j<n;j++)s-=M[i][j]*x[j];x[i]=s/M[i][i];steps.push({title:`Teskari yurish: ${vars[i]}`,body:`<div class="math">${vars[i]} = ${fmt(x[i])}</div>`})}let res=0;for(let i=0;i<n;i++){let lhs=0;for(let j=0;j<n;j++)lhs+=original[i][j]*x[j];res=Math.max(res,Math.abs(lhs-original[i][n]))}document.getElementById('gauss-summary').innerHTML=x.map((v,i)=>`${esc(vars[i])} = <b>${fmt(v)}</b>`).join('<br>');document.getElementById('gauss-check').innerHTML=`Residual ‖Ax−b‖∞ = <b>${fmt(res)}</b>`;steps.push({title:'Tekshiruv',body:`<div class="math">‖Ax−b‖∞ = ${fmt(res)}</div>${res<1e-8?'<span class="ok">Yechim sistema bilan mos.</span>':'<span class="warn">Residual sezilarli.</span>'}`});setSteps('gauss',steps)}catch(e){document.getElementById('gauss-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 
+const gaussVisualState={frames:[],index:0,timer:null};
+function matrixVisualHTML(M,pivot=null,target=null,changedRow=null){
+  const n=M.length,cols=n+1;
+  let html='<div class="matrix-grid" style="grid-template-columns:repeat('+cols+',minmax(64px,auto))">';
+  for(let i=0;i<n;i++)for(let j=0;j<cols;j++){
+    const cls=['matrix-cell'];
+    if(j===n)cls.push('matrix-divider');
+    if(pivot&&pivot[0]===i&&pivot[1]===j)cls.push('pivot');
+    if(target&&target[0]===i&&target[1]===j)cls.push('target');
+    if(changedRow===i)cls.push('changed');
+    html+='<div class="'+cls.join(' ')+'">'+fmt(M[i][j])+'</div>';
+  }
+  return html+'</div>';
+}
+function gaussVisualSetup(frames){if(gaussVisualState.timer){clearInterval(gaussVisualState.timer);gaussVisualState.timer=null}gaussVisualState.frames=frames;gaussVisualState.index=0;drawGaussVisual()}
+function gaussVisualPrev(){if(!gaussVisualState.frames.length)return;gaussVisualState.index=Math.max(0,gaussVisualState.index-1);drawGaussVisual()}
+function gaussVisualNext(){if(!gaussVisualState.frames.length)return;gaussVisualState.index=Math.min(gaussVisualState.frames.length-1,gaussVisualState.index+1);drawGaussVisual()}
+function playGaussVisual(){if(!gaussVisualState.frames.length)return;if(gaussVisualState.timer){clearInterval(gaussVisualState.timer);gaussVisualState.timer=null;return}gaussVisualState.index=0;drawGaussVisual();gaussVisualState.timer=setInterval(()=>{if(gaussVisualState.index>=gaussVisualState.frames.length-1){clearInterval(gaussVisualState.timer);gaussVisualState.timer=null;return}gaussVisualState.index++;drawGaussVisual()},900)}
+function drawGaussVisual(){
+  const f=gaussVisualState.frames[gaussVisualState.index];if(!f)return;
+  const box=document.getElementById('gauss-visual');box.classList.remove('empty');box.innerHTML=matrixVisualHTML(f.M,f.pivot,f.target,f.changedRow);
+  document.getElementById('gauss-visual-note').innerHTML='<b>'+esc(f.title)+'</b> — '+esc(f.note)+' <span class="muted">('+ (gaussVisualState.index+1)+'/'+gaussVisualState.frames.length+')</span>';
+}
+function solveGauss(){try{
+  let M,vars;const mode=document.getElementById('gauss-mode').value;
+  if(mode==='matrix'){M=parseMatrix(document.getElementById('gauss-mat').value);vars=Array.from({length:M.length},(_,i)=>`x${i+1}`)}
+  else({M,vars}=parseLinearEquations(document.getElementById('gauss-eqs').value));
+  const n=M.length;if(!n||M.some(r=>r.length!==n+1||r.some(v=>!Number.isFinite(v))))throw new Error('n×(n+1) kengaytirilgan matritsa kerak.');
+  const original=M.map(r=>r.slice()),steps=[{title:'Boshlang‘ich kengaytirilgan matritsa',body:`<div class="matrix">${esc(matrixText(M))}</div><div class="paper-note"><b>Qog‘ozda:</b> koeffitsiyentlarni chap tomonga, ozod hadlarni oxirgi ustunga yozamiz.</div>`}];
+  const frames=[{M:M.map(r=>r.slice()),title:'Boshlanish',note:'Kengaytirilgan matritsa tayyor. Maqsad — diagonal ostidagi elementlarni ketma-ket nol qilish.'}];
+  for(let k=0;k<n;k++){
+    let p=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;
+    if(Math.abs(M[p][k])<1e-14)throw new Error('Matritsa singulyar yoki sistema yagona yechimga ega emas.');
+    frames.push({M:M.map(r=>r.slice()),pivot:[p,k],title:`${k+1}-pivotni tanlash`,note:`x${k+1} ustunida moduli eng katta element pivot qilinadi. Bu nolga yaqin songa bo‘lish xavfini kamaytiradi.`});
+    if(p!==k){
+      [M[p],M[k]]=[M[k],M[p]];
+      steps.push({title:`Pivot tanlash: R${k+1} ↔ R${p+1}`,body:`Sonli barqarorlik uchun modul bo‘yicha eng katta pivot yuqoriga olindi.<div class="matrix">${esc(matrixText(M))}</div><div class="paper-note"><b>Qog‘ozda:</b> ikki qatorning o‘rnini to‘liq almashtiring.</div>`});
+      frames.push({M:M.map(r=>r.slice()),pivot:[k,k],changedRow:k,title:'Qatorlar almashtirildi',note:`Pivot endi diagonalning (${k+1},${k+1}) o‘rnida.`});
+    }
+    for(let i=k+1;i<n;i++){
+      const m=M[i][k]/M[k][k];
+      const before=M.map(r=>r.slice());
+      frames.push({M:before,pivot:[k,k],target:[i,k],title:`R${i+1} dagi elementni yo‘qotish`,note:`Ko‘paytiruvchi m=a${i+1}${k+1}/a${k+1}${k+1}=${fmt(m)}. Endi R${i+1} ← R${i+1} − m·R${k+1}.`});
+      for(let j=k;j<=n;j++)M[i][j]-=m*M[k][j];
+      steps.push({title:`R${i+1} dan x${k+1} ni yo‘qotish`,body:`<div class="math">m = a${i+1}${k+1}/a${k+1}${k+1} = ${fmt(m)}\nR${i+1} ← R${i+1} − m·R${k+1}</div><div class="matrix">${esc(matrixText(M))}</div><div class="paper-note"><b>Qog‘ozda:</b> pivot qatorini m ga ko‘paytirib, target qatordan ayiring. Maqsad — qizil elementni 0 qilish.</div>`});
+      frames.push({M:M.map(r=>r.slice()),pivot:[k,k],changedRow:i,title:'Element nol qilindi',note:`R${i+1} yangilandi; x${k+1} koeffitsiyenti nol bo‘ldi.`});
+    }
+  }
+  const x=Array(n).fill(0);
+  for(let i=n-1;i>=0;i--){
+    let rhs=M[i][n],sum=0;for(let j=i+1;j<n;j++)sum+=M[i][j]*x[j];
+    x[i]=(rhs-sum)/M[i][i];
+    steps.push({title:`Teskari yurish: ${vars[i]}`,body:`<div class="math">${fmt(M[i][i])}·${vars[i]} + ${fmt(sum)} = ${fmt(rhs)}\n${vars[i]} = (${fmt(rhs)}-${fmt(sum)})/${fmt(M[i][i])} = ${fmt(x[i])}</div><div class="paper-note"><b>Qog‘ozda:</b> oxirgi tenglamadan boshlang; topilgan noma’lumni yuqoridagi tenglamalarga ketma-ket qo‘ying.</div>`});
+  }
+  let res=0;for(let i=0;i<n;i++){let lhs=0;for(let j=0;j<n;j++)lhs+=original[i][j]*x[j];res=Math.max(res,Math.abs(lhs-original[i][n]))}
+  document.getElementById('gauss-summary').innerHTML=x.map((v,i)=>`${esc(vars[i])} = <b>${fmt(v)}</b>`).join('<br>');
+  document.getElementById('gauss-check').innerHTML=`Residual ‖Ax−b‖∞ = <b>${fmt(res)}</b>`;
+  steps.push({title:'Tekshiruv',body:`<div class="math">‖Ax−b‖∞ = ${fmt(res)}</div>${res<1e-8?'<span class="ok">Yechim sistema bilan mos.</span>':'<span class="warn">Residual sezilarli.</span>'}`});
+  setSteps('gauss',steps);gaussVisualSetup(frames);
+}catch(e){document.getElementById('gauss-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 function lagrangeVal(xs,ys,x){let sum=0;for(let i=0;i<xs.length;i++){let L=1;for(let j=0;j<xs.length;j++)if(i!==j)L*=(x-xs[j])/(xs[i]-xs[j]);sum+=ys[i]*L}return sum}
 function newtonCoeffs(xs,ys){const c=ys.slice();for(let j=1;j<xs.length;j++)for(let i=xs.length-1;i>=j;i--)c[i]=(c[i]-c[i-1])/(xs[i]-xs[i-j]);return c}
 function newtonVal(xs,c,x){let s=c.at(-1);for(let i=c.length-2;i>=0;i--)s=s*(x-xs[i])+c[i];return s}
-function solveInterp(method){try{const xs=parseNums(document.getElementById('ix').value),ys=parseNums(document.getElementById('iy').value),t=parseScalar(document.getElementById('itarget').value);if(xs.length!==ys.length||xs.length<2)throw new Error('x va y sonlari teng va kamida 2 ta bo‘lishi kerak.');if(new Set(xs.map(fmt)).size!==xs.length)throw new Error('x tugunlar takrorlanmasligi kerak.');const c=newtonCoeffs(xs,ys),val=method==='lagrange'?lagrangeVal(xs,ys,t):newtonVal(xs,c,t),steps=[{title:'Berilgan tugunlar',body:table(['i','xᵢ','yᵢ'],xs.map((x,i)=>[i,fmt(x),fmt(ys[i])]))}];if(method==='lagrange'){for(let i=0;i<xs.length;i++){let terms=[];for(let j=0;j<xs.length;j++)if(i!==j)terms.push(`(${fmt(t)}-${fmt(xs[j])})/(${fmt(xs[i])}-${fmt(xs[j])})`);let L=1;for(let j=0;j<xs.length;j++)if(i!==j)L*=(t-xs[j])/(xs[i]-xs[j]);steps.push({title:`L${i}(x*) bazis`,body:`<div class="math">L${i}(${fmt(t)}) = ${terms.join(' · ')} = ${fmt(L)}\ny${i}L${i} = ${fmt(ys[i]*L)}</div>`})}}else{steps.push({title:'Bo‘lingan ayirmalar koeffitsiyentlari',body:table(['i','aᵢ'],c.map((v,i)=>[i,fmt(v)]))});steps.push({title:'Newton ko‘phadini Horner usulida hisoblash',body:`<div class="math">P(${fmt(t)}) = ${fmt(val)}</div>`})}steps.push({title:'Yakuniy natija',body:`P(${fmt(t)}) ≈ <b>${fmt(val)}</b>. Interpolant barcha berilgan tugunlardan o‘tadi.`});document.getElementById('interp-summary').innerHTML=`<b>${method==='lagrange'?'Lagrange':'Newton'}</b><br>P(${fmt(t)}) ≈ <b>${fmt(val)}</b><br>Tugunlar: ${xs.length}`;setSteps('interp',steps);const f=x=>method==='lagrange'?lagrangeVal(xs,ys,x):newtonVal(xs,c,x),xmin=Math.min(...xs),xmax=Math.max(...xs),pad=Math.max((xmax-xmin)*.1,.5);plotFunction(document.getElementById('interp-canvas'),f,xmin-pad,xmax+pad,xs.map((x,i)=>({x,y:ys[i]})).concat([{x:t,y:val}]))}catch(e){document.getElementById('interp-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 
+const interpVisualState={xs:[],ys:[],t:0,mode:'all',c:[]};
+function lagrangeBasis(xs,i,x){let L=1;for(let j=0;j<xs.length;j++)if(i!==j)L*=(x-xs[j])/(xs[i]-xs[j]);return L}
+function interpBasisControls(xs){
+  const box=document.getElementById('interp-basis-controls');box.classList.remove('hidden');
+  box.innerHTML='<button class="active" onclick="showInterpBasis(\'all\',this)">P(x)</button>'+xs.map((_,i)=>`<button onclick="showInterpBasis(${i},this)">y${i}L${i}(x)</button>`).join('');
+}
+function showInterpBasis(mode,btn){
+  interpVisualState.mode=mode;
+  document.querySelectorAll('#interp-basis-controls button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  drawInterpTeachingVisual();
+}
+function drawInterpTeachingVisual(){
+  const S=interpVisualState;if(!S.xs.length)return;
+  const xmin=Math.min(...S.xs),xmax=Math.max(...S.xs),pad=Math.max((xmax-xmin)*.12,.5);
+  let f,note;
+  if(S.mode==='all'){
+    f=x=>lagrangeVal(S.xs,S.ys,x);
+    note='Qora/ko‘k egri — barcha bazislarning yig‘indisi P(x). U har bir berilgan (xᵢ,yᵢ) tugundan o‘tadi.';
+  }else{
+    const i=+S.mode;f=x=>S.ys[i]*lagrangeBasis(S.xs,i,x);
+    note=`Bu faqat y${i}L${i}(x) hissasi. L${i}(x${i})=1, qolgan barcha tugunlarda 0; shuning uchun u faqat o‘z tugunining qiymatini “olib keladi”.`;
+  }
+  plotFunction(document.getElementById('interp-canvas'),f,xmin-pad,xmax+pad,S.xs.map((x,i)=>({x,y:S.ys[i]})).concat([{x:S.t,y:lagrangeVal(S.xs,S.ys,S.t)}]));
+  document.getElementById('interp-visual-note').innerHTML='<b>Geometrik ma’no:</b> '+esc(note);
+}
+function solveInterp(method){try{
+  const xs=parseNums(document.getElementById('ix').value),ys=parseNums(document.getElementById('iy').value),t=parseScalar(document.getElementById('itarget').value);
+  if(xs.length!==ys.length||xs.length<2)throw new Error('x va y sonlari teng va kamida 2 ta bo‘lishi kerak.');
+  if(new Set(xs.map(fmt)).size!==xs.length)throw new Error('x tugunlar takrorlanmasligi kerak.');
+  const c=newtonCoeffs(xs,ys),val=method==='lagrange'?lagrangeVal(xs,ys,t):newtonVal(xs,c,t);
+  const steps=[{title:'Berilgan tugunlar',body:table(['i','xᵢ','yᵢ'],xs.map((x,i)=>[i,fmt(x),fmt(ys[i])]))+'<div class="paper-note"><b>Qog‘ozda:</b> avval nuqtalarni jadval qilib yozing. Qaysi x* da qiymat kerakligi alohida belgilanadi.</div>'}];
+  if(method==='lagrange'){
+    for(let i=0;i<xs.length;i++){
+      let terms=[];for(let j=0;j<xs.length;j++)if(i!==j)terms.push(`(${fmt(t)}-${fmt(xs[j])})/(${fmt(xs[i])}-${fmt(xs[j])})`);
+      let L=lagrangeBasis(xs,i,t);
+      steps.push({title:`L${i}(x*) bazis`,body:`<div class="math">L${i}(${fmt(t)}) = ${terms.join(' · ')} = ${fmt(L)}\ny${i}L${i} = ${fmt(ys[i]*L)}</div><div class="paper-note"><b>Qog‘ozda:</b> L${i} da suratga x*−xⱼ, maxrajga xᵢ−xⱼ yoziladi. Shu bazis o‘z tugunida 1, boshqalarida 0 bo‘ladi.</div>`});
+    }
+    steps.push({title:'Barcha hissalarni qo‘shish',body:`<div class="math">P(x*) = Σ yᵢLᵢ(x*) = ${fmt(val)}</div>`});
+  }else{
+    steps.push({title:'Bo‘lingan ayirmalar koeffitsiyentlari',body:table(['i','aᵢ'],c.map((v,i)=>[i,fmt(v)]))+'<div class="paper-note"><b>Qog‘ozda:</b> bo‘lingan ayirmalar uchburchak jadvali tuziladi; birinchi elementlar Newton koeffitsiyentlari bo‘ladi.</div>'});
+    steps.push({title:'Newton ko‘phadini Horner usulida hisoblash',body:`<div class="math">P(${fmt(t)}) = ${fmt(val)}</div><div class="paper-note"><b>Qog‘ozda:</b> ichma-ich ko‘paytirish bilan yuqori darajali polinomni kamroq amal bilan hisoblaymiz.</div>`});
+  }
+  steps.push({title:'Yakuniy natija',body:`P(${fmt(t)}) ≈ <b>${fmt(val)}</b>. Interpolant barcha berilgan tugunlardan o‘tadi.`});
+  document.getElementById('interp-summary').innerHTML=`<b>${method==='lagrange'?'Lagrange':'Newton'}</b><br>P(${fmt(t)}) ≈ <b>${fmt(val)}</b><br>Tugunlar: ${xs.length}`;
+  setSteps('interp',steps);
+  interpVisualState.xs=xs;interpVisualState.ys=ys;interpVisualState.t=t;interpVisualState.c=c;interpVisualState.mode='all';
+  interpBasisControls(xs);drawInterpTeachingVisual();
+}catch(e){document.getElementById('interp-summary').innerHTML=`<span class="err"><b>Xato:</b> ${esc(e.message)}</span>`}}
 function integralMethod(f,a,b,n,method){n=Math.max(1,Math.floor(n));let adjusted=false;if(method==='simpson'&&n%2){n++;adjusted=true}const h=(b-a)/n;let value;if(method==='rect'){let s=0;for(let i=0;i<n;i++)s+=f(a+(i+.5)*h);value=s*h}else if(method==='trap'){let s=.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);value=s*h}else{let s=f(a)+f(b);for(let i=1;i<n;i++)s+=(i%2?4:2)*f(a+i*h);value=s*h/3}return{value,n,h,adjusted}}
 function integralInputs(){const raw=document.getElementById('int-f').value,f=compileExpr(raw,['x']),a=parseScalar(document.getElementById('int-a').value),b=parseScalar(document.getElementById('int-b').value),n=+document.getElementById('int-n').value;if(!Number.isFinite(n)||n<1)throw new Error('n ≥ 1 bo‘lishi kerak.');return{raw,f,a,b,n}}
 function intName(m){return m==='rect'?'O‘rta to‘g‘ri to‘rtburchak':m==='trap'?'Trapetsiya':'Simpson'}
