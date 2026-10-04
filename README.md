@@ -10,6 +10,16 @@ GitHub Pages ishga tushirilgach:
 
 **https://abdulaziz-al-ilm.github.io/NumLab/**
 
+## Academic v2 imkoniyatlari
+
+- **Qadam-baqadam rejim** — natija birdan ochilmaydi; algoritm bosqichlari ketma-ket ko‘rsatiladi.
+- **Oldingi / Keyingi / Hammasini och** boshqaruvi.
+- **Metodlarni taqqoslash** — ildiz topish, integral va ODE bo‘limlarida.
+- **Residual va konvergentsiya tekshiruvi**.
+- **Chebishev tugunlari demo**si.
+- **PDF / Print** uchun akademik ko‘rinish.
+- Domlaga topshirish bo‘yicha [himoya qo‘llanmasi](docs/SUBMISSION_GUIDE.md).
+
 ## Hozirgi modullar
 
 ### 1. Algebraik va transendent tenglamalar
@@ -114,4 +124,4 @@ Andijon davlat universiteti — Amaliy matematika
 
 ## Holat
 
-**v1 — MVP / active development**
+**v2.0 — Academic Edition / ready for classroom demonstration**
