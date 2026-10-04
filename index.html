@@ -18,7 +18,7 @@
       <button class="ghost" onclick="toggleHelp()">Yozish qoidalari</button>
     </div>
   </div>
-  <div class="hero-badge"><b>v3.0</b><span>Universal Input</span></div>
+  <div class="hero-badge"><b>v3.1</b><span>Teaching Lab</span></div>
 </header>
 <div id="help" class="notice hidden">
   <b>Oddiy matematik yozuv ishlaydi:</b>
@@ -80,7 +80,14 @@
 -2x+y+2z=-3</textarea><p class="hint">O‘zgaruvchilar: x, y, z, t, u, v, w yoki x1, x2, ...</p></div>
       <button onclick="solveGauss()">Gauss usuli bilan yech</button>
     </div>
-    <div class="card result-card"><h3>Yechim va tekshiruv</h3><div id="gauss-summary" class="summary">Sistemani kiriting.</div><div id="gauss-check" class="check"></div></div>
+    <div class="card result-card">
+  <h3>Yechim va eliminatsiya xaritasi</h3>
+  <div id="gauss-summary" class="summary">Sistemani kiriting.</div>
+  <div id="gauss-check" class="check"></div>
+  <div id="gauss-visual" class="matrix-visual empty">Gauss usulini ishga tushiring — pivot va yo‘qotish bosqichlari rang bilan ko‘rinadi.</div>
+  <div class="visual-controls"><button class="small secondary" onclick="gaussVisualPrev()">← Bosqich</button><button class="small" onclick="gaussVisualNext()">Keyingi bosqich →</button><button class="small secondary" onclick="playGaussVisual()">▶ Animatsiya</button></div>
+  <div id="gauss-visual-note" class="visual-note">Har bosqichda qaysi element pivot va qaysi koeffitsiyent yo‘qotilayotganini ko‘rasiz.</div>
+</div>
   </div>
   <step-box data-key="gauss"></step-box>
 </section>
@@ -89,7 +96,13 @@
   <div class="theory"><b>Nega kerak?</b> Jadvalda faqat ayrim nuqtalar ma’lum, lekin ularning orasidagi qiymat kerak bo‘lsa interpolatsiya ishlatiladi: sensor kalibrovkasi, tajriba natijalari, jadval funksiyalari. <b>Qog‘ozda:</b> Lagrange’da har bir Lᵢ(x) bazis ko‘phadi quriladi; Newton’da bo‘lingan ayirmalar jadvali tuziladi. <b>Afzallik:</b> mavjud ma’lumotdan oraliq qiymat topiladi. <b>Kamchilik:</b> juda ko‘p yoki yomon joylashgan tugunlarda tebranish paydo bo‘lishi mumkin.</div>
   <div class="grid2">
     <div class="card"><label>x tugunlar</label><input id="ix" value="0,1,2,3"><label>y qiymatlar</label><input id="iy" value="1,2,5,10"><label>x*</label><input id="itarget" value="1.5"><div class="buttons"><button onclick="solveInterp('lagrange')">Lagrange</button><button onclick="solveInterp('newton')">Newton</button></div></div>
-    <div class="card result-card"><h3>Natija</h3><div id="interp-summary" class="summary">Tugunlarni kiriting.</div><canvas id="interp-canvas" width="720" height="330"></canvas></div>
+    <div class="card result-card">
+  <h3>Natija va bazislar</h3>
+  <div id="interp-summary" class="summary">Tugunlarni kiriting.</div>
+  <canvas id="interp-canvas" width="720" height="350"></canvas>
+  <div id="interp-basis-controls" class="basis-controls hidden"></div>
+  <div id="interp-visual-note" class="visual-note">Lagrange usulida har bir Lᵢ(x) bazisining yakuniy polinomga qo‘shgan hissasini alohida ko‘rish mumkin.</div>
+</div>
   </div>
   <step-box data-key="interp"></step-box>
 </section>
@@ -123,7 +136,7 @@
   <step-box data-key="pde"></step-box>
 </section>
 </main>
-<footer><b>NumLab UZ v3.0</b> • Abdulaziz To‘lqinov • Andijon davlat universiteti • Amaliy matematika<br><span class="muted">Kiritish → Normalizatsiya → Algoritm → Qadamlar → Tekshiruv → Xulosa</span></footer>
+<footer><b>NumLab UZ v3.1</b> • Abdulaziz To‘lqinov • Andijon davlat universiteti • Amaliy matematika<br><span class="muted">Kiritish → Normalizatsiya → Algoritm → Qadamlar → Tekshiruv → Xulosa</span></footer>
 <script src="app.js"></script>
 </body>
 </html>
