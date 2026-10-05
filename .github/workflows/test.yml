@@ -22,6 +22,7 @@ jobs:
           node --check subjects/python/python.js
           node --check subjects/problem-solving/practice.js
           node --check core/progress.js
+          node --check core/enrichment.js
           node --check dashboard.js
           node --check research.js
       - name: Numerical smoke tests
