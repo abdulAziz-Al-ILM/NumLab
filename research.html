@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MathLab Research Workspace</title>
+<link rel="stylesheet" href="mathlab.css">
+<style>
+.rw{max-width:1180px;margin:auto;padding:42px 20px 90px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;margin-top:15px}.panel h3{margin-top:0}.field{display:block;font-size:12px;font-weight:800;color:#334155;margin:10px 0}.field input,.field textarea,.field select{display:block;width:100%;margin-top:5px;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}.field textarea{min-height:82px}.snaprow{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #e5e7eb}.snaprow small{color:#64748b}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btns button{border:0;border-radius:9px;padding:10px 13px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}.btns .secondary{background:#e2e8f0;color:#172033}.preview{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:12px;padding:16px;max-height:560px;overflow:auto;font:13px/1.55 ui-monospace,monospace}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{border:1px solid #e2e8f0;padding:7px;vertical-align:top}.table th{background:#f8fafc;position:sticky;top:0}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:900}.note{padding:11px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;color:#475569}.danger{background:#fff7ed;border-color:#fed7aa;color:#9a3412}@media(max-width:850px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark">ILM</span><div><b>MathLab</b><small>Research Workspace</small></div></div><a class="github" href="dashboard.html">← Dashboard</a></header>
+<main class="rw">
+<div class="section-title" style="padding:0"><p>LOCAL-FIRST • REPRODUCIBLE</p><h2>Tajriba → dataset → tezis / maqola</h2></div>
+<div class="grid">
+<section class="panel">
+<h3>1. Tadqiqot pasporti</h3>
+<label class="field">Loyiha nomi<input id="r-title" placeholder="Masalan: RK4 va Euler usullarining xatolik tahlili"></label>
+<label class="field">Tadqiqot savoli<textarea id="r-question" placeholder="Qaysi savolga javob izlaymiz?"></textarea></label>
+<label class="field">Gipoteza<textarea id="r-hypothesis" placeholder="Oldindan kutilayotgan natija..."></textarea></label>
+<label class="field">Mustaqil o‘zgaruvchi<input id="r-independent" placeholder="Masalan: qadam h"></label>
+<label class="field">Bog‘liq o‘zgaruvchi<input id="r-dependent" placeholder="Masalan: absolute error"></label>
+<label class="field">Nazorat qilinadigan shartlar<textarea id="r-controls" placeholder="Bir xil boshlang‘ich shart, interval, tolerance..."></textarea></label>
+<label class="field">Metodologiya<textarea id="r-method" placeholder="Tajribalar qanday o‘tkaziladi?"></textarea></label>
+<label class="field">Cheklovlar / threat to validity<textarea id="r-limitations" placeholder="Nimalar natijani buzishi yoki umumlashtirishni cheklashi mumkin?"></textarea></label>
+<div class="btns"><button onclick="saveProject()">Local saqlash</button><button class="secondary" onclick="loadProject()">Qayta yuklash</button></div>
+</section>
+
+<section class="panel">
+<h3>2. Tajribalarni tanlang</h3>
+<p class="note">Dashboard’da saqlangan snapshotlar shu yerda dataset qatorlariga aylanadi. Bir xil savolni turli parametrlar bilan takrorlash maqola uchun ancha kuchli dalil beradi.</p>
+<div id="research-snaps"></div>
+<div class="btns"><button onclick="selectAllSnaps()">Hammasini tanlash</button><button class="secondary" onclick="clearSelection()">Tanlovni tozalash</button></div>
+</section>
+</div>
+
+<section class="panel">
+<h3>3. Dataset preview</h3>
+<div id="dataset-info" class="note"></div>
+<div id="dataset" class="tablewrap"></div>
+<div class="btns"><button onclick="buildDataset()">Datasetni yangila</button><button onclick="exportDatasetCSV()">Dataset CSV</button><button onclick="exportReproJSON()">Reproducibility JSON</button></div>
+</section>
+
+<div class="grid">
+<section class="panel">
+<h3>4. Ilmiy yozuv generatori</h3>
+<label class="field">Format<select id="r-format"><option value="thesis">Tezis</option><option value="article">Maqola</option><option value="lab">Ilmiy laboratoriya hisoboti</option></select></label>
+<div class="btns"><button onclick="generateDraft()">Skelet yarat</button><button onclick="exportMarkdown()">Markdown yuklash</button></div>
+<p class="note danger">Generator fakt yoki ilmiy xulosani o‘zi to‘qimaydi. U siz yozgan gipoteza, metod va snapshotlardan strukturali draft yasaydi; statistik xulosa faqat real dataset tahlilidan keyin yozilishi kerak.</p>
+</section>
+<section class="panel">
+<h3>5. Reproduksiya checklist</h3>
+<div class="note">
+✓ Masala/model formulasi saqlangan<br>
+✓ Input parametrlar snapshotda saqlangan<br>
+✓ Sana-vaqt va modul manbasi saqlangan<br>
+✓ Natija bloklari saqlangan<br>
+✓ Gipoteza–kuzatuv–xulosa yozuvi qo‘shilishi mumkin<br>
+✓ Dataset CSV/JSON eksport qilinadi<br>
+✓ Tajriba snapshot orqali qayta ochiladi
+</div>
+</section>
+</div>
+
+<section class="panel">
+<h3>Draft preview</h3>
+<pre id="draft" class="preview">Avval tadqiqot pasportini to‘ldiring va snapshotlarni tanlang.</pre>
+</section>
+</main>
+<script src="research.js"></script>
+</body></html>
