@@ -25,14 +25,29 @@ Har bir mavzu bir xil pedagogik zanjirda quriladi:
 
 ## Fanlar
 
-| Modul | Holat | Maqsad |
+| Modul | Holat | Universal laboratoriya |
 |---|---|---|
-| **Sonli usullar / NumLab** | Ishlaydi | Ildizlar, Gauss, interpolatsiya, integral, ODE, Laplace |
-| **Funksional analiz** | Qurilmoqda | Metrika, norma, Banach, Hilbert, operatorlarni vizual tushuntirish |
-| **Matematik fizika tenglamalari** | Qurilmoqda | Issiqlik, to‘lqin, Laplace, Fourier |
-| **Matematik modellashtirish** | Qurilmoqda | Real muammo → model → simulyatsiya → validatsiya |
-| **Python dasturlash** | Qurilmoqda | Kod execution visualizer + matematik algoritmlar |
-| **Masalalar yechish praktikumi** | Qurilmoqda | Urinish → hint → qadam → yechim → o‘xshash masala |
+| **Sonli usullar / NumLab** | Ishlaydi | Universal input, metod taqqoslash, animatsiya, residual/xatolik |
+| **Funksional analiz** | Ishlaydi | Norma, metrika, Hilbert, Cauchy va o‘z f(x), g(x) funksiyalarini sinash |
+| **Matematik fizika tenglamalari** | Ishlaydi | PDE klassifikatsiyasi, heat/wave/Laplace, erkin boshlang‘ich va chegara shartlari |
+| **Matematik modellashtirish** | Ishlaydi | Tayyor modellar + o‘z y'=f(t,y) modelingiz, Euler/RK4 |
+| **Python dasturlash** | Ishlaydi | Real browser Python 3.14 + NumPy + qadamli execution visualizer |
+| **Masalalar yechish praktikumi** | Ishlaydi | Parametrli generator, qiyinlik, hint → strategiya → qadam, sessiya statistika |
+
+## Research Edition
+
+MathLab serversiz ilmiy ish workflow'ini ham qo‘llaydi:
+
+- Local progress/history
+- Lab report → Print/PDF
+- Experiment snapshot va qayta ochish
+- A/B parametr taqqoslash
+- Experiment Notebook: **gipoteza → kuzatuv → xulosa → teglar**
+- Research Workspace
+- Snapshotlardan dataset
+- CSV/JSON reproducibility export
+- Tezis/maqola/laboratoriya uchun Markdown skeleti
+- Barcha ma’lumotlar foydalanuvchining brauzerida qoladi
 
 ## ILM Mizan missiyasi
 
@@ -50,3 +65,8 @@ Batafsil: docs/PLATFORM_ARCHITECTURE.md va docs/EVALUATION_PROTOCOL.md.
 Andijon davlat universiteti — Amaliy matematika
 
 Open educational project by **ILM Mizan**.
+
+## Freeze point — Research Edition v1
+
+2026-yil oktabr holatida platformaning 6 ta asosiy fan moduli, universal laboratoriya qatlamlari va serversiz research workflow'i ishlaydigan holatga keltirildi. Keyingi yirik rivojlantirishdan oldin ushbu versiya universitet darsi, foydalanuvchi testi va ilmiy pilot tajribada sinalishi maqsadga muvofiq.
+
