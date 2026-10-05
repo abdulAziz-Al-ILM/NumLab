@@ -23,5 +23,6 @@ jobs:
           node --check subjects/problem-solving/practice.js
           node --check core/progress.js
           node --check dashboard.js
+          node --check research.js
       - name: Numerical smoke tests
         run: node tests/smoke.js
